@@ -1,5 +1,8 @@
 #!/bin/bash
 
-mkdir /tmp/cjAll
+if [ ! -d /tmp/cjAll ]; then
+	mkdir /tmp/cjAll
+fi
+
 rsync -az _build/html/ /tmp/cjAll/html/
 cp pull /tmp/cjAll/html/pull
