@@ -1,0 +1,2 @@
+rsync -az _build/html/ /tmp/cjAll/html/
+cp pull /tmp/cjAll/html/pull

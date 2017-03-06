@@ -1,8 +1,13 @@
+#!/bin/bash
+
 makeReadme ()
 {
 	grip --export
 	mv README.html _build/html/index_readme.html
 	mv _build/html/index_readme.html _build/html/index.html
+	rsync -az camera_cal/ _build/html/camera_cal/
+	rsync -az test_images/ _build/html/test_images/
+	rsync -az output_images/ _build/html/output_images/
   echo
   echo README Watch Done
   echo

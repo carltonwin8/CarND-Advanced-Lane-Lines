@@ -1,4 +1,4 @@
-# Advanced Lane Finding Project
+# Advanced Lane Finding Projects
 
 The pre-fork README can be found [here](README_ori.md).
 This README contains my notes for the project.
