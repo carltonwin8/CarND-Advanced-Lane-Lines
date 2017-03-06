@@ -2,7 +2,7 @@
 
 makeReadme ()
 {
-	grip --export
+	grip --export --title="Lane Finding"
 	mv README.html _build/html/index_readme.html
 	mv _build/html/index_readme.html _build/html/index.html
 	rsync -az camera_cal/ _build/html/camera_cal/
