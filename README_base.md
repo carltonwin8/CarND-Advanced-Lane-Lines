@@ -27,7 +27,7 @@ all chessboard corners in a test image. `imgpoints` will be appended with the
 (x, y) pixel position of each of the corners in the image plane with each
 successful chessboard detection.
 The code for these operation is in the
-[calibrateCamera](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/advancedLaneLinesLib.html#calibrateCamera)
+[calibrateCamera](_modules/advancedLaneLinesLib.html#calibrateCamera)
 function.
 
 I then used the output `objpoints` and `imgpoints` to compute the camera

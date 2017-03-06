@@ -1,0 +1,23 @@
+#!/usr/bin/env python
+
+import os
+import shutil
+import sys
+
+base = "README_base.md"
+out = "README.md"
+
+if not os.path.exists(base):
+    print("Error! Could not find file = " + base)
+    sys.exit(-1)
+
+localStr = "](_modules/"
+netStr = "](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/"
+
+with open(base) as f:
+    content = f.read()
+
+newContent = content.replace(localStr, netStr)
+
+with open(out,"w") as f:
+    f.write(newContent)

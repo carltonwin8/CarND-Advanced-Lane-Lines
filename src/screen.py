@@ -13,9 +13,9 @@ def main():
     """
     Displays processed images on screen to verify they the image pipeline
     """
-    mtx, dist = ll.calibrate('../camera_cal/calibration*.jpg')
+    #mtx, dist = ll.calibrate('../camera_cal/calibration*.jpg')
     pickle = '../dist_pickle.p'
-    utl.distort_save(pickle, mtx, dist)
+    #utl.distort_save(pickle, mtx, dist)
     mtx, dist = utl.distort_load(pickle)
     cal_test_img = '../camera_cal/calibration1.jpg'
     img_dist = cv2.imread(cal_test_img)
