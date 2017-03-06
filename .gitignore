@@ -1,7 +1,5 @@
 rst/
 _templates/
-_static/
 _build/
-cnd-all-src/__pycache__/
-dist_pickle.p
+src/__pycache__/
 README.html

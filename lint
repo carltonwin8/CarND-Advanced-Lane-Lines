@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#pylint src/lane_line.py
+#pylint src/utils.py
+#pylint src/screen.py
+#pylint src/files.py

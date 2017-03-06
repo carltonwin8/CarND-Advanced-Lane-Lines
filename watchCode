@@ -2,7 +2,7 @@
 
 watchCode ()
 {
-	sphinx-aipdoc -fo rst cnd-all-src
+	sphinx-apidoc -fo rst src
 	mv _build/html/index.html _build/html/index_readme.html
 	make html
 	mv _build/html/index.html _build/html/index_code.html

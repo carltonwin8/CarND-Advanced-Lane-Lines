@@ -5,7 +5,7 @@
 """
 import pickle
 
-def distortSave(file,mtx,dist):
+def distort_save(file, mtx, dist):
     """
     :param file: Filename to save undistorted parameters
     :param mtx: Camera calibartion mtx value
@@ -16,7 +16,7 @@ def distortSave(file,mtx,dist):
     dist_pickle["dist"] = dist
     pickle.dump(dist_pickle, open(file, "wb"))
 
-def distortLoad(file):
+def distort_load(file):
     """
     :param file: Filename to save undistorted parameters
     """

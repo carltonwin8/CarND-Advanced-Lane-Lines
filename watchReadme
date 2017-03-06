@@ -8,12 +8,12 @@ makeReadme ()
 	rsync -az camera_cal/ _build/html/camera_cal/
 	rsync -az test_images/ _build/html/test_images/
 	rsync -az output_images/ _build/html/output_images/
-  echo
-  echo README Watch Done
-  echo
+	echo
+	echo README Watch Done
+	echo
 }
 
 makeReadme
 while inotifywait -e close_write README.md; do
-  makeReadme
+	makeReadme
 done
