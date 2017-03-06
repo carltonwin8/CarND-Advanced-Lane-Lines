@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>advancedLaneLinesUtils &#8212; Advanced Lane Lines Project 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>Advanced Lane Lines Project 0.0.1 documentation</span></a></h1>
+        <h2 class="heading"><span>advancedLaneLinesUtils</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <h1>Source code for advancedLaneLinesUtils</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">@author: Carlton Joseph</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+
+<div class="viewcode-block" id="distortSave"><a class="viewcode-back" href="../rst/advancedLaneLinesUtils.html#advancedLaneLinesUtils.distortSave">[docs]</a><span class="k">def</span> <span class="nf">distortSave</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">mtx</span><span class="p">,</span><span class="n">dist</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param file: Filename to save undistorted parameters</span>
+<span class="sd">    :param mtx: Camera calibartion mtx value</span>
+<span class="sd">    :param dist: Camera calibartion dist value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dist_pickle</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;mtx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mtx</span>
+    <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;dist&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dist_pickle</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="distortLoad"><a class="viewcode-back" href="../rst/advancedLaneLinesUtils.html#advancedLaneLinesUtils.distortLoad">[docs]</a><span class="k">def</span> <span class="nf">distortLoad</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param file: Filename to save undistorted parameters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dist_pickle</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">dist_pickle</span><span class="p">[</span><span class="s1">&#39;mtx&#39;</span><span class="p">],</span> <span class="n">dist_pickle</span><span class="p">[</span><span class="s1">&#39;dist&#39;</span><span class="p">]</span></div>
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Carlton Joseph.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>
