@@ -1,0 +1,14 @@
+makeReadme ()
+{
+	grip --export
+	mv README.html _build/html/index_readme.html
+	mv _build/html/index_readme.html _build/html/index.html
+  echo
+  echo README Watch Done
+  echo
+}
+
+makeReadme
+while inotifywait -e close_write README.md; do
+  makeReadme
+done

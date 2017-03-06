@@ -1,0 +1,1 @@
+browser-sync start -s _build/html -f _build/html/**/*.html --reload-delay 1000 

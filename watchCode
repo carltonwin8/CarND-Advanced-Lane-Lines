@@ -1,0 +1,16 @@
+watchCode ()
+{
+	sphinx-aipdoc -fo rst cnd-all-src
+  mv _build/html/index.html _build/html/index_readme.html
+	make html
+	mv _build/html/index.html _build/html/index_code.html
+	mv _build/html/index_readme.html _build/html/index.html
+  echo
+  echo Code Watch Done
+  echo
+}
+
+watchCode
+while inotifywait -e close_write cnd-all-src/*.py; do
+  watchCode
+done
