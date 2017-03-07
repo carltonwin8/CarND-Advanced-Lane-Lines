@@ -2,6 +2,11 @@
 
 watchCode ()
 {
+	if [ -d rst; ]; then
+		rm rst/*
+	else
+		mkdir rst
+	fi
 	sphinx-apidoc -fo rst src
 	mv _build/html/index.html _build/html/index_readme.html
 	make html
@@ -15,6 +20,6 @@ watchCode ()
 }
 
 watchCode
-while inotifywait -e close_write cnd-all-src/*.py; do
+while inotifywait -e close_write src/*.py; do
 	watchCode
 done

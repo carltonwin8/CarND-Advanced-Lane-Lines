@@ -1,9 +1,9 @@
 # Advanced Lane Finding Projects
 
 The pre-fork README can be found [here](README_ori.md).
-This README contains my notes for the project.
-The IPython notebooks can be found [here as ipynb](advancedLaneFinding.ipynb) and
-[here as html](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines).
+This README contains my notes for the project at
+the [github.com](http://github.com) repository
+[here](https://github.com/carltonwin8/CarND-Advanced-Lane-Lines).
 
 The steps of this project are the following:
 
@@ -26,22 +26,19 @@ calibration image. Thus, `objp` is just a replicated array of coordinates, and
 all chessboard corners in a test image. `imgpoints` will be appended with the
 (x, y) pixel position of each of the corners in the image plane with each
 successful chessboard detection.
-The code for these operation is in the
-[calibrateCamera](_modules/advancedLaneLinesLib.html#calibrateCamera)
-function.
 
 I then used the output `objpoints` and `imgpoints` to compute the camera
 calibration and distortion coefficients using the `cv2.calibrateCamera()`
 function.
 The code for these operation is in the
-[Calibarte Camera](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines#calibrate)
-cell.
+[calibrateCamera](_modules/lane_line.html#calibrate)
+function.
 
 I applied this distortion correction to the test image using the
 `cv2.undistort()` function and obtained these result:
 The code for these operation is in the
-[Test Camera Calibration With Images](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines#testCalibration)
-cell.
+[Test Camera Calibration With Images](_modules/lane_line.html#undistort)
+function.
 The following images shows the test results.
 
 | Original Image | Undistorted Image | Original Image | Undistorted Image
@@ -53,6 +50,7 @@ The following images shows the test results.
 I used the sobel X gradient thresholds _anded_ with the HLS color space S
 channel threshold to generate a binary image.
 The code for these operation is in the
+[Test Camera Calibration With Images](_modules/lane_line.html#undistort)
 [Threshold binary image creating via color transform and gradient](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines#thresholds)
 cell.
 The following images shows the results from this step.
