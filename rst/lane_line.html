@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lane_line module &#8212; Advanced Lane Lines Project 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="screen module" href="screen.html" />
+    <link rel="prev" title="files module" href="files.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>Advanced Lane Lines Project 0.0.1 documentation</span></a></h1>
+        <h2 class="heading"><span>lane_line module</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        «&#160;&#160;<a href="files.html">files module</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="screen.html">screen module</a>&#160;&#160;»
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="module-lane_line">
+<span id="lane-line-module"></span><h1>lane_line module<a class="headerlink" href="#module-lane_line" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="lane_line.bin2color">
+<code class="descclassname">lane_line.</code><code class="descname">bin2color</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#bin2color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.bin2color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a binary image to a full scale RGB Image</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lane_line.calibrate">
+<code class="descclassname">lane_line.</code><code class="descname">calibrate</code><span class="sig-paren">(</span><em>img_glob</em>, <em>img_size=(1280</em>, <em>720)</em>, <em>rows=6</em>, <em>cols=9</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#calibrate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.calibrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a cameras calibration information based on the images provided</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>img_glob</strong> &#8211; File glob pattern camera calibration images</li>
+<li><strong>img_size</strong> &#8211; Size of image</li>
+<li><strong>rows</strong> &#8211; Number of corners in the row of the chessboard images</li>
+<li><strong>cols</strong> &#8211; Number of corners in the column of the chessboard images</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">image calibration parameters</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="lane_line.combine_binary">
+<code class="descclassname">lane_line.</code><code class="descname">combine_binary</code><span class="sig-paren">(</span><em>img1</em>, <em>img2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#combine_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.combine_binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combines two binary images via an OR operator
+:param img1: image
+:param img2: image
+:return: binary image</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lane_line.create_lines">
+<code class="descclassname">lane_line.</code><code class="descname">create_lines</code><span class="sig-paren">(</span><em>points</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#create_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.create_lines" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="lane_line.draw_lines">
+<code class="descclassname">lane_line.</code><code class="descname">draw_lines</code><span class="sig-paren">(</span><em>img, lines, color=[255, 0, 0], thickness=10, weights=(0.5, 0.5)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#draw_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.draw_lines" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="lane_line.draw_window_centroids">
+<code class="descclassname">lane_line.</code><code class="descname">draw_window_centroids</code><span class="sig-paren">(</span><em>warped</em>, <em>window_centroids</em>, <em>window_width=50</em>, <em>window_height=80</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#draw_window_centroids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.draw_window_centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identify lane lines in a binary image</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lane_line.find_window_centroids">
+<code class="descclassname">lane_line.</code><code class="descname">find_window_centroids</code><span class="sig-paren">(</span><em>warped</em>, <em>window_width=50</em>, <em>window_height=80</em>, <em>margin=100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_window_centroids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_window_centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the center of the lane lines</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lane_line.hls_s_binary">
+<code class="descclassname">lane_line.</code><code class="descname">hls_s_binary</code><span class="sig-paren">(</span><em>img</em>, <em>s_thresh_min=150</em>, <em>s_thresh_max=255</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#hls_s_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.hls_s_binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies edeges in an image using the HLS S dimension and the thresholds provided</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>img</strong> &#8211; image</li>
+<li><strong>s_thresh_min</strong> &#8211; threshold min</li>
+<li><strong>s_thresh_max</strong> &#8211; threshold max</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">binary image</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="lane_line.perspective_transform">
+<code class="descclassname">lane_line.</code><code class="descname">perspective_transform</code><span class="sig-paren">(</span><em>img</em>, <em>M</em>, <em>img_size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#perspective_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.perspective_transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="lane_line.perspective_transform_map">
+<code class="descclassname">lane_line.</code><code class="descname">perspective_transform_map</code><span class="sig-paren">(</span><em>src</em>, <em>dst</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#perspective_transform_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.perspective_transform_map" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="lane_line.perspective_transform_values">
+<code class="descclassname">lane_line.</code><code class="descname">perspective_transform_values</code><span class="sig-paren">(</span><em>img_size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#perspective_transform_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.perspective_transform_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets perspective values</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lane_line.sobel_x_binary">
+<code class="descclassname">lane_line.</code><code class="descname">sobel_x_binary</code><span class="sig-paren">(</span><em>img</em>, <em>thresh_min=20</em>, <em>thresh_max=100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#sobel_x_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.sobel_x_binary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Identifies edges in an image using sobel x and the thresholds provided</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>img</strong> &#8211; image</li>
+<li><strong>s_thresh_min</strong> &#8211; threshold min</li>
+<li><strong>s_thresh_max</strong> &#8211; threshold max</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">binary image</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="lane_line.undistort">
+<code class="descclassname">lane_line.</code><code class="descname">undistort</code><span class="sig-paren">(</span><em>img</em>, <em>mtx</em>, <em>dist</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#undistort"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.undistort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Undistorts an image with the provided calibration information</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>img</strong> &#8211; image</li>
+<li><strong>mtx</strong> &#8211; Camera calibration mtx value</li>
+<li><strong>dist</strong> &#8211; Camera calibration dist value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">undistored image</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="lane_line.window_mask">
+<code class="descclassname">lane_line.</code><code class="descname">window_mask</code><span class="sig-paren">(</span><em>width</em>, <em>height</em>, <em>img_ref</em>, <em>center</em>, <em>level</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#window_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.window_mask" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        «&#160;&#160;<a href="files.html">files module</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="../index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="screen.html">screen module</a>&#160;&#160;»
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Carlton Joseph.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

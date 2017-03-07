@@ -1,0 +1,282 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lane_line &#8212; Advanced Lane Lines Project 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>Advanced Lane Lines Project 0.0.1 documentation</span></a></h1>
+        <h2 class="heading"><span>lane_line</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <h1>Source code for lane_line</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. moduleauthor:: Carlton Joseph &lt;carlton.joseph@gmail.com&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+
+
+<div class="viewcode-block" id="calibrate"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.calibrate">[docs]</a><span class="k">def</span> <span class="nf">calibrate</span><span class="p">(</span><span class="n">img_glob</span><span class="p">,</span> <span class="n">img_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1280</span><span class="p">,</span> <span class="mi">720</span><span class="p">),</span> <span class="n">rows</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">9</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a cameras calibration information based on the images provided</span>
+<span class="sd">    </span>
+<span class="sd">    :param img_glob: File glob pattern camera calibration images</span>
+<span class="sd">    :param img_size: Size of image</span>
+<span class="sd">    :param rows: Number of corners in the row of the chessboard images</span>
+<span class="sd">    :param cols: Number of corners in the column of the chessboard images</span>
+<span class="sd">    :return: image calibration parameters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># prepare object points, like (0,0,0), (1,0,0), (2,0,0) ....,(6,5,0)</span>
+    <span class="n">objp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">rows</span> <span class="o">*</span> <span class="n">cols</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">objp</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">cols</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="n">rows</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Arrays to store object points and image points from all the images.</span>
+    <span class="n">objpoints</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 3d points in real world space</span>
+    <span class="n">imgpoints</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 2d points in image plane</span>
+
+    <span class="n">images</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">img_glob</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">images</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NameError</span><span class="p">(</span><span class="s2">&quot;Found No Images For =&gt; &quot;</span> <span class="o">+</span> <span class="n">img_glob</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">fname</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">images</span><span class="p">):</span>
+        <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">fname</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+        <span class="n">ret</span><span class="p">,</span> <span class="n">corners</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findChessboardCorners</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ret</span><span class="p">:</span>
+            <span class="n">objpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">objp</span><span class="p">)</span>
+            <span class="n">imgpoints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">corners</span><span class="p">)</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">calibrateCamera</span><span class="p">(</span><span class="n">objpoints</span><span class="p">,</span> <span class="n">imgpoints</span><span class="p">,</span> <span class="n">img_size</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span></div>
+
+
+<div class="viewcode-block" id="undistort"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.undistort">[docs]</a><span class="k">def</span> <span class="nf">undistort</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Undistorts an image with the provided calibration information</span>
+<span class="sd">    </span>
+<span class="sd">    :param img: image</span>
+<span class="sd">    :param mtx: Camera calibration mtx value</span>
+<span class="sd">    :param dist: Camera calibration dist value</span>
+<span class="sd">    :return: undistored image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">undistort</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mtx</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="sobel_x_binary"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.sobel_x_binary">[docs]</a><span class="k">def</span> <span class="nf">sobel_x_binary</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">thresh_min</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">thresh_max</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identifies edges in an image using sobel x and the thresholds provided</span>
+<span class="sd">    </span>
+<span class="sd">    :param img: image</span>
+<span class="sd">    :param s_thresh_min: threshold min</span>
+<span class="sd">    :param s_thresh_max: threshold max</span>
+<span class="sd">    :return: binary image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">gray</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
+    <span class="n">sobelx</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">Sobel</span><span class="p">(</span><span class="n">gray</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">CV_64F</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Take the derivative in x</span>
+    <span class="c1"># below absolute x derivative to accentuate lines away from horizontal</span>
+    <span class="n">abs_sobelx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">sobelx</span><span class="p">)</span>
+    <span class="n">scaled_sobel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">(</span><span class="mi">255</span> <span class="o">*</span> <span class="n">abs_sobelx</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">abs_sobelx</span><span class="p">))</span>
+    <span class="n">sxbinary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">scaled_sobel</span><span class="p">)</span>
+    <span class="n">sxbinary</span><span class="p">[(</span><span class="n">scaled_sobel</span> <span class="o">&gt;=</span> <span class="n">thresh_min</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">scaled_sobel</span> <span class="o">&lt;=</span> <span class="n">thresh_max</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">sxbinary</span></div>
+
+
+<div class="viewcode-block" id="hls_s_binary"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.hls_s_binary">[docs]</a><span class="k">def</span> <span class="nf">hls_s_binary</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">s_thresh_min</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">s_thresh_max</span><span class="o">=</span><span class="mi">255</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identifies edeges in an image using the HLS S dimension and the thresholds provided</span>
+<span class="sd">    </span>
+<span class="sd">    :param img: image</span>
+<span class="sd">    :param s_thresh_min: threshold min</span>
+<span class="sd">    :param s_thresh_max: threshold max</span>
+<span class="sd">    :return: binary image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hls</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2HLS</span><span class="p">)</span>
+    <span class="n">s_channel</span> <span class="o">=</span> <span class="n">hls</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">s_binary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">s_channel</span><span class="p">)</span>
+    <span class="n">s_binary</span><span class="p">[(</span><span class="n">s_channel</span> <span class="o">&gt;=</span> <span class="n">s_thresh_min</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">s_channel</span> <span class="o">&lt;=</span> <span class="n">s_thresh_max</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">s_binary</span></div>
+
+
+<div class="viewcode-block" id="combine_binary"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.combine_binary">[docs]</a><span class="k">def</span> <span class="nf">combine_binary</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">img2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Combines two binary images via an OR operator</span>
+<span class="sd">    :param img1: image</span>
+<span class="sd">    :param img2: image</span>
+<span class="sd">    :return: binary image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">combined_binary</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">img1</span><span class="p">)</span>
+    <span class="n">combined_binary</span><span class="p">[(</span><span class="n">img1</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">img2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">combined_binary</span></div>
+
+<div class="viewcode-block" id="perspective_transform_values"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.perspective_transform_values">[docs]</a><span class="k">def</span> <span class="nf">perspective_transform_values</span><span class="p">(</span><span class="n">img_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1280</span><span class="p">,</span> <span class="mi">720</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets perspective values</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">src</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span>
+        <span class="p">[[(</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">65</span><span class="p">,</span> <span class="n">img_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">100</span><span class="p">],</span>
+        <span class="p">[((</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span> <span class="o">-</span> <span class="mi">10</span><span class="p">),</span> <span class="n">img_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+        <span class="p">[(</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">6</span><span class="p">)</span> <span class="o">+</span> <span class="mi">60</span><span class="p">,</span> <span class="n">img_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+        <span class="p">[(</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">65</span><span class="p">),</span> <span class="n">img_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">100</span><span class="p">]])</span>
+    <span class="n">dst</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span>
+        <span class="p">[[(</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">[(</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">4</span><span class="p">),</span> <span class="n">img_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+        <span class="p">[(</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">4</span><span class="p">),</span> <span class="n">img_size</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+        <span class="p">[(</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">4</span><span class="p">),</span> <span class="mi">0</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span></div>
+
+<div class="viewcode-block" id="perspective_transform_map"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.perspective_transform_map">[docs]</a><span class="k">def</span> <span class="nf">perspective_transform_map</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">):</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">getPerspectiveTransform</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">M</span></div>
+
+<div class="viewcode-block" id="perspective_transform"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.perspective_transform">[docs]</a><span class="k">def</span> <span class="nf">perspective_transform</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">img_size</span><span class="o">=</span><span class="p">(</span><span class="mi">1280</span><span class="p">,</span> <span class="mi">720</span><span class="p">)):</span>
+    <span class="n">warped</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">warpPerspective</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">img_size</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">warped</span></div>
+
+<div class="viewcode-block" id="create_lines"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.create_lines">[docs]</a><span class="k">def</span> <span class="nf">create_lines</span><span class="p">(</span><span class="n">points</span><span class="p">):</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">([[</span><span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">end</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">end</span><span class="p">[</span><span class="mi">1</span><span class="p">]]])</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">end</span>
+        
+    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">([[</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">start</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">start</span><span class="p">[</span><span class="mi">1</span><span class="p">]]])</span>
+    <span class="k">return</span> <span class="n">lines</span></div>
+    
+<div class="viewcode-block" id="draw_lines"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.draw_lines">[docs]</a><span class="k">def</span> <span class="nf">draw_lines</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">lines</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">thickness</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)):</span>
+    <span class="n">img2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">x1</span><span class="p">,</span><span class="n">y1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span> <span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">),</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">),</span> <span class="n">color</span><span class="p">,</span> <span class="n">thickness</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">addWeighted</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">img2</span><span class="p">,</span> <span class="n">weights</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="bin2color"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.bin2color">[docs]</a><span class="k">def</span> <span class="nf">bin2color</span><span class="p">(</span><span class="n">img</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a binary image to a full scale RGB Image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">img255</span> <span class="o">=</span> <span class="n">img</span><span class="o">*</span><span class="mi">255</span>
+    <span class="n">rgb255</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">img255</span><span class="p">,</span> <span class="n">img255</span><span class="p">,</span> <span class="n">img255</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">rgb255</span></div>
+
+<div class="viewcode-block" id="find_window_centroids"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.find_window_centroids">[docs]</a><span class="k">def</span> <span class="nf">find_window_centroids</span><span class="p">(</span><span class="n">warped</span><span class="p">,</span> <span class="n">window_width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">window_height</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find the center of the lane lines</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">window_centroids</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># Store the (left,right) window centroid positions per level</span>
+    <span class="n">window</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">window_width</span><span class="p">)</span> <span class="c1"># Create our window template that we will use for convolutions</span>
+    
+    <span class="c1"># First find the two starting positions for the left and right lane by using np.sum to get the vertical image slice</span>
+    <span class="c1"># and then np.convolve the vertical image slice with the window template </span>
+    
+    <span class="c1"># Sum quarter bottom of image to get slice, could use a different ratio</span>
+    <span class="n">l_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">warped</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">4</span><span class="p">):,:</span><span class="nb">int</span><span class="p">(</span><span class="n">warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">l_center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">window</span><span class="p">,</span><span class="n">l_sum</span><span class="p">))</span><span class="o">-</span><span class="n">window_width</span><span class="o">/</span><span class="mi">2</span>
+    <span class="n">r_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">warped</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">4</span><span class="p">):,</span><span class="nb">int</span><span class="p">(</span><span class="n">warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">):],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">r_center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">window</span><span class="p">,</span><span class="n">r_sum</span><span class="p">))</span><span class="o">-</span><span class="n">window_width</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="nb">int</span><span class="p">(</span><span class="n">warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Add what we found for the first layer</span>
+    <span class="n">window_centroids</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">l_center</span><span class="p">,</span><span class="n">r_center</span><span class="p">))</span>
+    
+    <span class="c1"># Go through each layer looking for max pixel locations</span>
+    <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,(</span><span class="nb">int</span><span class="p">)(</span><span class="n">warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">window_height</span><span class="p">)):</span>
+        <span class="c1"># convolve the window into the vertical slice of the image</span>
+        <span class="n">image_layer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">warped</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="p">(</span><span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">window_height</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">level</span><span class="o">*</span><span class="n">window_height</span><span class="p">),:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">conv_signal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">convolve</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">image_layer</span><span class="p">)</span>
+        <span class="c1"># Find the best left centroid by using past left center as a reference</span>
+        <span class="c1"># Use window_width/2 as offset because convolution signal reference is at right side of window, not center of window</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">window_width</span><span class="o">/</span><span class="mi">2</span>
+        <span class="n">l_min_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">l_center</span><span class="o">+</span><span class="n">offset</span><span class="o">-</span><span class="n">margin</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">l_max_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">l_center</span><span class="o">+</span><span class="n">offset</span><span class="o">+</span><span class="n">margin</span><span class="p">,</span><span class="n">warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">l_center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">conv_signal</span><span class="p">[</span><span class="n">l_min_index</span><span class="p">:</span><span class="n">l_max_index</span><span class="p">])</span><span class="o">+</span><span class="n">l_min_index</span><span class="o">-</span><span class="n">offset</span>
+        <span class="c1"># Find the best right centroid by using past right center as a reference</span>
+        <span class="n">r_min_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">r_center</span><span class="o">+</span><span class="n">offset</span><span class="o">-</span><span class="n">margin</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+        <span class="n">r_max_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">r_center</span><span class="o">+</span><span class="n">offset</span><span class="o">+</span><span class="n">margin</span><span class="p">,</span><span class="n">warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">r_center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">conv_signal</span><span class="p">[</span><span class="n">r_min_index</span><span class="p">:</span><span class="n">r_max_index</span><span class="p">])</span><span class="o">+</span><span class="n">r_min_index</span><span class="o">-</span><span class="n">offset</span>
+        <span class="c1"># Add what we found for that layer</span>
+        <span class="n">window_centroids</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">l_center</span><span class="p">,</span><span class="n">r_center</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">window_centroids</span></div>
+
+<div class="viewcode-block" id="window_mask"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.window_mask">[docs]</a><span class="k">def</span> <span class="nf">window_mask</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">img_ref</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span><span class="n">level</span><span class="p">):</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">img_ref</span><span class="p">)</span>
+    <span class="n">output</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">img_ref</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="p">(</span><span class="n">level</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">height</span><span class="p">):</span><span class="nb">int</span><span class="p">(</span><span class="n">img_ref</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">level</span><span class="o">*</span><span class="n">height</span><span class="p">),</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">center</span><span class="o">-</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">)):</span><span class="nb">min</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">center</span><span class="o">+</span><span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span><span class="n">img_ref</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="draw_window_centroids"><a class="viewcode-back" href="../rst/lane_line.html#lane_line.draw_window_centroids">[docs]</a><span class="k">def</span> <span class="nf">draw_window_centroids</span><span class="p">(</span><span class="n">warped</span><span class="p">,</span> <span class="n">window_centroids</span><span class="p">,</span> <span class="n">window_width</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">window_height</span><span class="o">=</span><span class="mi">80</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identify lane lines in a binary image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Points used to draw all the left and right windows</span>
+    <span class="n">l_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">warped</span><span class="p">)</span>
+    <span class="n">r_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">warped</span><span class="p">)</span>
+
+    <span class="c1"># Go through each level and draw the windows</span>
+    <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">window_centroids</span><span class="p">)):</span>
+        <span class="c1"># Window_mask is a function to draw window areas</span>
+        <span class="n">l_mask</span> <span class="o">=</span> <span class="n">window_mask</span><span class="p">(</span><span class="n">window_width</span><span class="p">,</span> <span class="n">window_height</span><span class="p">,</span> <span class="n">warped</span><span class="p">,</span> <span class="n">window_centroids</span><span class="p">[</span><span class="n">level</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">level</span><span class="p">)</span>
+        <span class="n">r_mask</span> <span class="o">=</span> <span class="n">window_mask</span><span class="p">(</span><span class="n">window_width</span><span class="p">,</span> <span class="n">window_height</span><span class="p">,</span> <span class="n">warped</span><span class="p">,</span> <span class="n">window_centroids</span><span class="p">[</span><span class="n">level</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">level</span><span class="p">)</span>
+        <span class="c1"># Add graphic points from window mask here to total pixels found </span>
+        <span class="n">l_points</span><span class="p">[(</span><span class="n">l_points</span> <span class="o">==</span> <span class="mi">255</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">l_mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">)</span> <span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
+        <span class="n">r_points</span><span class="p">[(</span><span class="n">r_points</span> <span class="o">==</span> <span class="mi">255</span><span class="p">)</span> <span class="o">|</span> <span class="p">((</span><span class="n">r_mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">)</span> <span class="p">]</span> <span class="o">=</span> <span class="mi">255</span>
+
+    <span class="c1"># Draw the results</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r_points</span><span class="o">+</span><span class="n">l_points</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> <span class="c1"># add both left and right window pixels together</span>
+    <span class="n">zero_channel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">template</span><span class="p">)</span> <span class="c1"># create a zero color channle </span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">merge</span><span class="p">((</span><span class="n">zero_channel</span><span class="p">,</span><span class="n">template</span><span class="p">,</span><span class="n">zero_channel</span><span class="p">)),</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> <span class="c1"># make window pixels green</span>
+    <span class="n">warpage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">merge</span><span class="p">((</span><span class="n">warped</span><span class="o">*</span><span class="mi">255</span><span class="p">,</span><span class="n">warped</span><span class="o">*</span><span class="mi">255</span><span class="p">,</span><span class="n">warped</span><span class="o">*</span><span class="mi">255</span><span class="p">)),</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> <span class="c1"># making the original road pixels 3 color channels</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">addWeighted</span><span class="p">(</span><span class="n">warpage</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="c1"># overlay the orignal road image with window results</span>
+    <span class="k">return</span> <span class="n">output</span></div>
+    
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Carlton Joseph.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

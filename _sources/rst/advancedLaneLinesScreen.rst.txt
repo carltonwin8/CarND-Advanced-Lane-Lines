@@ -1,7 +1,0 @@
-advancedLaneLinesScreen module
-==============================
-
-.. automodule:: advancedLaneLinesScreen
-    :members:
-    :undoc-members:
-    :show-inheritance:

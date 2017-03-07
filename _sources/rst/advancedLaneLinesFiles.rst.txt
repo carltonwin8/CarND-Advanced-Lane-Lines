@@ -1,7 +1,0 @@
-advancedLaneLinesFiles module
-=============================
-
-.. automodule:: advancedLaneLinesFiles
-    :members:
-    :undoc-members:
-    :show-inheritance:
