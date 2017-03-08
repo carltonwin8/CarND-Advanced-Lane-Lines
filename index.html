@@ -56,10 +56,30 @@
                 <h1>
 <a id="user-content-advanced-lane-finding-projects" class="anchor" href="#advanced-lane-finding-projects" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Advanced Lane Finding Projects</h1>
 
-<p>The pre-fork README can be found <a href="README_ori.md">here</a>.
-This README contains my notes for the project at
-the <a href="http://github.com">github.com</a> repository
-<a href="https://github.com/carltonwin8/CarND-Advanced-Lane-Lines">here</a>.</p>
+<p>This README contains notes for the project hosted at the repository
+<a href="https://github.com/carltonwin8/CarND-Advanced-Lane-Lines">here</a>.
+This project is my completion of the Udacity project template provided at
+<a href="https://github.com/udacity/CarND-Advanced-Lane-Lines">this</a>
+repository.</p>
+
+<p>The project code was developed using the
+<a href="https://pythonhosted.org/spyder/">spyder IDE</a>
+and is maded up of the following files.</p>
+
+<ul>
+<li>
+<a href="_modules/lane_line.html">lane_line.py</a> -
+The main lane line identification procedures.</li>
+<li>
+<a href="_modules/files.html">files.py</a> -
+Script used to generate the pictures for this document.</li>
+<li>
+<a href="_modules/screen.html">screen.py</a> -
+Script used during the development and debug phase.</li>
+<li>
+<a href="_modules/utils.html">utils.py</a> -
+Utility procedures that are not part of the main lane line identification procedures.</li>
+</ul>
 
 <p>The steps of this project are the following:</p>
 
@@ -89,14 +109,14 @@ successful chessboard detection.</p>
 <p>I then used the output <code>objpoints</code> and <code>imgpoints</code> to compute the camera
 calibration and distortion coefficients using the <code>cv2.calibrateCamera()</code>
 function.
-The code for these operation is in the
+The code for these operations is in the
 <a href="_modules/lane_line.html#calibrate">calibrateCamera</a>
 function.</p>
 
 <p>I applied this distortion correction to the test image using the
 <code>cv2.undistort()</code> function and obtained these result:
-The code for these operation is in the
-<a href="_modules/lane_line.html#undistort">Test Camera Calibration With Images</a>
+The code for this operation is in the
+<a href="_modules/lane_line.html#undistort">undistort</a>
 function.
 The following images shows the test results.</p>
 
@@ -125,26 +145,28 @@ The following images shows the test results.</p>
 <p>I used the sobel X gradient thresholds <em>anded</em> with the HLS color space S
 channel threshold to generate a binary image.
 The code for these operation is in the
-<a href="_modules/lane_line.html#undistort">Test Camera Calibration With Images</a>
-<a href="http://carltonwin8.github.io/CarND-Advanced-Lane-Lines#thresholds">Threshold binary image creating via color transform and gradient</a>
-cell.
-The following images shows the results from this step.</p>
+<a href="_modules/lane_line.html#sobel_x_binary">sobel_x_binary</a>,
+<a href="_modules/lane_line.html#hls_s_binary">hls_s_binary</a>,
+<a href="_modules/lane_line.html#combine_binary">combine_binary</a> and
+<a href="_modules/lane_line.html#edge_detect">edge_detect</a>
+functions.
+The following images shows the intermediate results from these steps.</p>
 
 <table>
 <thead>
 <tr>
 <th align="center">sobel x</th>
 <th align="center">hls s</th>
-<th align="center">x s AND color</th>
-<th align="center">x s AND</th>
+<th align="center">x or'ed s color</th>
+<th align="center">x or'ed s</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center"><a href="output_images/binary_sobel_x.jpg" target="_blank"><img src="output_images/binary_sobel_x.jpg" alt="" style="max-width:100%;"></a></td>
-<td align="center"><a href="output_images/binary_hls_s.jpg" target="_blank"><img src="output_images/binary_hls_s.jpg" alt="" style="max-width:100%;"></a></td>
-<td align="center"><a href="output_images/binary_sx_color.jpg" target="_blank"><img src="output_images/binary_sx_color.jpg" alt="" style="max-width:100%;"></a></td>
-<td align="center"><a href="output_images/binary_sx.jpg" target="_blank"><img src="output_images/binary_sx.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="output_images/straight_lines1_sobel_x.jpg" target="_blank"><img src="output_images/straight_lines1_sobel_x.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="output_images/straight_lines1_hls_s.jpg" target="_blank"><img src="output_images/straight_lines1_hls_s.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="output_images/straight_lines1_sxs_c.jpg" target="_blank"><img src="output_images/straight_lines1_sxs_c.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="output_images/straight_lines1_sxs.jpg" target="_blank"><img src="output_images/straight_lines1_sxs.jpg" alt="" style="max-width:100%;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -153,16 +175,22 @@ The following images shows the results from this step.</p>
 <a id="user-content-perspective-transform" class="anchor" href="#perspective-transform" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Perspective Transform</h2>
 
 <p>The code for this operation is in the
-<a href="http://carltonwin8.github.io/CarND-Advanced-Lane-Lines#perspectiveTransform">Perspective Transform</a>
-cell.
+<a href="_modules/lane_line.html#perspective_transform_values">perspective_transform_values</a>,
+<a href="_modules/lane_line.html#hperspective_transform_map">perspective_transform_map</a> and
+<a href="_modules/lane_line.html#perspective_transform">perspective_transform</a>
+functions.
 The <code>cv2.getPerspectiveTransform()</code> function creates a transform from the
-source (<code>src</code>) and destination (<code>dst</code>) points noted below.</p>
+source (<code>src</code>) and destination (<code>dst</code>) points noted below.
+The values shown below were optimized on the first test image using the
+<a href="_modules/files.html#transform">files-transform</a> and
+<a href="_modules/utils.html#perspective_transform">utils-perspective_transform</a>
+utilities:</p>
 
 <div class="highlight highlight-source-python"><pre>src <span class="pl-k">=</span> np.float32(
-    [[(img_size[<span class="pl-c1">0</span>] <span class="pl-k">/</span> <span class="pl-c1">2</span>) <span class="pl-k">-</span> <span class="pl-c1">55</span>, img_size[<span class="pl-c1">1</span>] <span class="pl-k">/</span> <span class="pl-c1">2</span> <span class="pl-k">+</span> <span class="pl-c1">100</span>],
+    [[(img_size[<span class="pl-c1">0</span>] <span class="pl-k">/</span> <span class="pl-c1">2</span>) <span class="pl-k">-</span> <span class="pl-c1">60</span>, img_size[<span class="pl-c1">1</span>] <span class="pl-k">/</span> <span class="pl-c1">2</span> <span class="pl-k">+</span> <span class="pl-c1">100</span>],
     [((img_size[<span class="pl-c1">0</span>] <span class="pl-k">/</span> <span class="pl-c1">6</span>) <span class="pl-k">-</span> <span class="pl-c1">10</span>), img_size[<span class="pl-c1">1</span>]],
-    [(img_size[<span class="pl-c1">0</span>] <span class="pl-k">*</span> <span class="pl-c1">5</span> <span class="pl-k">/</span> <span class="pl-c1">6</span>) <span class="pl-k">+</span> <span class="pl-c1">60</span>, img_size[<span class="pl-c1">1</span>]],
-    [(img_size[<span class="pl-c1">0</span>] <span class="pl-k">/</span> <span class="pl-c1">2</span> <span class="pl-k">+</span> <span class="pl-c1">55</span>), img_size[<span class="pl-c1">1</span>] <span class="pl-k">/</span> <span class="pl-c1">2</span> <span class="pl-k">+</span> <span class="pl-c1">100</span>]])
+    [(img_size[<span class="pl-c1">0</span>] <span class="pl-k">*</span> <span class="pl-c1">5</span> <span class="pl-k">/</span> <span class="pl-c1">6</span>) <span class="pl-k">+</span> <span class="pl-c1">40</span>, img_size[<span class="pl-c1">1</span>]],
+    [(img_size[<span class="pl-c1">0</span>] <span class="pl-k">/</span> <span class="pl-c1">2</span> <span class="pl-k">+</span> <span class="pl-c1">60</span>), img_size[<span class="pl-c1">1</span>] <span class="pl-k">/</span> <span class="pl-c1">2</span> <span class="pl-k">+</span> <span class="pl-c1">100</span>]])
 dst <span class="pl-k">=</span> np.float32(
     [[(img_size[<span class="pl-c1">0</span>] <span class="pl-k">/</span> <span class="pl-c1">4</span>), <span class="pl-c1">0</span>],
     [(img_size[<span class="pl-c1">0</span>] <span class="pl-k">/</span> <span class="pl-c1">4</span>), img_size[<span class="pl-c1">1</span>]],
@@ -181,7 +209,7 @@ dst <span class="pl-k">=</span> np.float32(
 </thead>
 <tbody>
 <tr>
-<td align="center">585, 460</td>
+<td align="center">580, 460</td>
 <td align="center">320, 0</td>
 </tr>
 <tr>
@@ -189,11 +217,11 @@ dst <span class="pl-k">=</span> np.float32(
 <td align="center">320, 720</td>
 </tr>
 <tr>
-<td align="center">1127, 720</td>
+<td align="center">1106, 720</td>
 <td align="center">960, 720</td>
 </tr>
 <tr>
-<td align="center">695, 460</td>
+<td align="center">700, 460</td>
 <td align="center">960, 0</td>
 </tr>
 </tbody>
@@ -212,8 +240,8 @@ dst <span class="pl-k">=</span> np.float32(
 <tbody>
 <tr>
 <td align="center"><a href="test_images/straight_lines1.jpg" target="_blank"><img src="test_images/straight_lines1.jpg" alt="" style="max-width:100%;"></a></td>
-<td align="center"><a href="output_images/straight_lines1_transform.jpg" target="_blank"><img src="output_images/straight_lines1_transform.jpg" alt="" style="max-width:100%;"></a></td>
-<td align="center"><a href="output_images/binary_sx_transform.jpg" target="_blank"><img src="output_images/binary_sx_transform.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="output_images/straight_lines1_trans.jpg" target="_blank"><img src="output_images/straight_lines1_trans.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="output_images/straight_lines1_sxs_trans.jpg" target="_blank"><img src="output_images/straight_lines1_sxs_trans.jpg" alt="" style="max-width:100%;"></a></td>
 </tr>
 </tbody>
 </table>
@@ -258,14 +286,6 @@ dst <span class="pl-k">=</span> np.float32(
 <p>Here I'll talk about the approach I took, what techniques I used, what worked
 and why, where the pipeline might fail and how I might improve it if I were
 going to pursue this project further.  </p>
-
-<h2>
-<a id="user-content-todo" class="anchor" href="#todo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TODO</h2>
-
-<ul>
-<li>see if i can get the overlay the <code>src</code> and <code>dst</code> points on the transformed
-and non-transformed images.</li>
-</ul>
 
               </article>
             </div>

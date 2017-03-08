@@ -50,6 +50,23 @@
 <span id="utils-module"></span><h1>utils module<a class="headerlink" href="#module-utils" title="Permalink to this headline">¶</a></h1>
 <p>&#64;author: Carlton Joseph</p>
 <dl class="function">
+<dt id="utils.bin22color">
+<code class="descclassname">utils.</code><code class="descname">bin22color</code><span class="sig-paren">(</span><em>img1</em>, <em>img2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#bin22color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.bin22color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts two binary image to a full scale RGB image with</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.bin2color">
+<code class="descclassname">utils.</code><code class="descname">bin2color</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#bin2color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.bin2color" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a binary image to a full scale RGB Image</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="utils.calibrate">
+<code class="descclassname">utils.</code><code class="descname">calibrate</code><span class="sig-paren">(</span><em>execute</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#calibrate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.calibrate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="utils.distort_load">
 <code class="descclassname">utils.</code><code class="descname">distort_load</code><span class="sig-paren">(</span><em>file</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#distort_load"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.distort_load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads a distortion matrix from a file</p>
@@ -87,10 +104,98 @@
 </table>
 </dd></dl>
 
-<dl class="function">
-<dt id="utils.perspective_transform">
-<code class="descclassname">utils.</code><code class="descname">perspective_transform</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#perspective_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.perspective_transform" title="Permalink to this definition">¶</a></dt>
+<dl class="class">
+<dt id="utils.fn">
+<em class="property">class </em><code class="descclassname">utils.</code><code class="descname">fn</code><a class="reference internal" href="../_modules/utils.html#fn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.fn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class to contain all the file names used by screen.py and files.py</p>
+<dl class="attribute">
+<dt id="utils.fn.cal_glob">
+<code class="descname">cal_glob</code><em class="property"> = '../camera_cal/calibration*.jpg'</em><a class="headerlink" href="#utils.fn.cal_glob" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.cal_test_img">
+<code class="descname">cal_test_img</code><em class="property"> = '../camera_cal/calibration1.jpg'</em><a class="headerlink" href="#utils.fn.cal_test_img" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.cal_test_img_undist">
+<code class="descname">cal_test_img_undist</code><em class="property"> = '../output_images/calibration1_undist.jpg'</em><a class="headerlink" href="#utils.fn.cal_test_img_undist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.pickle_file">
+<code class="descname">pickle_file</code><em class="property"> = '../dist_pickle.p'</em><a class="headerlink" href="#utils.fn.pickle_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utils.fn.temp">
+<code class="descname">temp</code><span class="sig-paren">(</span><em>name</em>, <em>post</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#fn.temp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.fn.temp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test_img1">
+<code class="descname">test_img1</code><em class="property"> = '../test_images/straight_lines1.jpg'</em><a class="headerlink" href="#utils.fn.test_img1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test_img1_hls_s">
+<code class="descname">test_img1_hls_s</code><em class="property"> = '../output_images/straight_lines1_hls_s.jpg'</em><a class="headerlink" href="#utils.fn.test_img1_hls_s" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test_img1_sobel_x">
+<code class="descname">test_img1_sobel_x</code><em class="property"> = '../output_images/straight_lines1_sobel_x.jpg'</em><a class="headerlink" href="#utils.fn.test_img1_sobel_x" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test_img1_sxs">
+<code class="descname">test_img1_sxs</code><em class="property"> = '../output_images/straight_lines1_sxs.jpg'</em><a class="headerlink" href="#utils.fn.test_img1_sxs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test_img1_sxs_c">
+<code class="descname">test_img1_sxs_c</code><em class="property"> = '../output_images/straight_lines1_sxs_c.jpg'</em><a class="headerlink" href="#utils.fn.test_img1_sxs_c" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test_img1_sxs_trans">
+<code class="descname">test_img1_sxs_trans</code><em class="property"> = '../output_images/straight_lines1_sxs_trans.jpg'</em><a class="headerlink" href="#utils.fn.test_img1_sxs_trans" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test_img1_trans">
+<code class="descname">test_img1_trans</code><em class="property"> = '../output_images/straight_lines1_trans.jpg'</em><a class="headerlink" href="#utils.fn.test_img1_trans" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test_img1_undist">
+<code class="descname">test_img1_undist</code><em class="property"> = '../output_images/straight_lines1_undist.jpg'</em><a class="headerlink" href="#utils.fn.test_img1_undist" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="utils.perspective_transform">
+<em class="property">class </em><code class="descclassname">utils.</code><code class="descname">perspective_transform</code><span class="sig-paren">(</span><em>tl=-55</em>, <em>bl=-10</em>, <em>br=60</em>, <em>tr=55</em>, <em>size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#perspective_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.perspective_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="utils.perspective_transform.file_post">
+<code class="descname">file_post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#perspective_transform.file_post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.perspective_transform.file_post" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utils.perspective_transform.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#perspective_transform.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.perspective_transform.transform" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="utils.perspective_transform.transform_l">
+<code class="descname">transform_l</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#perspective_transform.transform_l"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.perspective_transform.transform_l" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
 
 </div>
 

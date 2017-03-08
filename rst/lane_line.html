@@ -52,12 +52,6 @@
   <div class="section" id="module-lane_line">
 <span id="lane-line-module"></span><h1>lane_line module<a class="headerlink" href="#module-lane_line" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
-<dt id="lane_line.bin2color">
-<code class="descclassname">lane_line.</code><code class="descname">bin2color</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#bin2color"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.bin2color" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a binary image to a full scale RGB Image</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="lane_line.calibrate">
 <code class="descclassname">lane_line.</code><code class="descname">calibrate</code><span class="sig-paren">(</span><em>img_glob</em>, <em>img_size=(1280</em>, <em>720)</em>, <em>rows=6</em>, <em>cols=9</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#calibrate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.calibrate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a cameras calibration information based on the images provided</p>
@@ -106,6 +100,12 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="lane_line.edge_detect">
+<code class="descclassname">lane_line.</code><code class="descname">edge_detect</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#edge_detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.edge_detect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detects the edges by ORing the sobel x and hls s channel threshold detects</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="lane_line.find_window_centroids">
 <code class="descclassname">lane_line.</code><code class="descname">find_window_centroids</code><span class="sig-paren">(</span><em>warped</em>, <em>window_width=50</em>, <em>window_height=80</em>, <em>margin=100</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_window_centroids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_window_centroids" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the center of the lane lines</p>
@@ -145,8 +145,8 @@
 
 <dl class="function">
 <dt id="lane_line.perspective_transform_values">
-<code class="descclassname">lane_line.</code><code class="descname">perspective_transform_values</code><span class="sig-paren">(</span><em>img_size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#perspective_transform_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.perspective_transform_values" title="Permalink to this definition">¶</a></dt>
-<dd><p>Gets perspective values</p>
+<code class="descclassname">lane_line.</code><code class="descname">perspective_transform_values</code><span class="sig-paren">(</span><em>tl=-55</em>, <em>tr=55</em>, <em>bl=-10</em>, <em>br=60</em>, <em>img_size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#perspective_transform_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.perspective_transform_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates perspective transform values</p>
 </dd></dl>
 
 <dl class="function">
