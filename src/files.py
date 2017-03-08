@@ -40,18 +40,21 @@ def transform(execute):
         pt.br = 40
         tuning = False
         if tuning == True: # temp storage during tuning above values
-            out_fn = utl.fn.temp(fn, pt.file_post())
-            cv2.imwrite(out_fn, pt.transform_l(img))
+            cv2.imwrite(utl.fn.temp(fn, pt.file_post()), pt.transform_l(img))
         else:
-            out_fn = utl.fn.test_img1_sxs_trans
-            cv2.imwrite(out_fn, pt.transform_l(img))
+            cv2.imwrite(utl.fn.test_img1_sxs_trans, pt.transform_l(img))
+            cv2.imwrite(utl.fn.test_img1_sxs_trans_nl, pt.transform(img))
             cv2.imwrite(utl.fn.test_img1_trans, pt.transform_l(cv2.imread(utl.fn.test_img1_undist)))
         
 def identify_line(execute):
     if execute:
-        img = cv2.imread(utl.fn.test_img1_sxs_trans)
-        centroids = ll.find_window_centroids(img)
-        print(len(centroids))
+        img = cv2.imread(utl.fn.test_img1_sxs_trans_nl)
+        channel = img[:, :, 0]
+        centroids = ll.find_window_centroids(channel)
+        print(centroids)
+        output = ll.draw_window_centroids(channel, centroids)
+        print(output.shape)
+        imshow(output)
 
 def main():
     """
@@ -60,7 +63,7 @@ def main():
     utl.calibrate(False)
     undistort(False)    
     edge_detect(False)
-    transform(True)
+    transform(False)
     identify_line(False)
 
 if __name__ == "__main__":

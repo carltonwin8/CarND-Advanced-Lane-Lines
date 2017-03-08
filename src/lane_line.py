@@ -98,13 +98,13 @@ def combine_binary(img1, img2):
     combined_binary[(img1 == 1) | (img2 == 1)] = 1
     return combined_binary
 
-def edge_detect(img):
+def threshold(img):
     """
     Detects the edges by ORing the sobel x and hls s channel threshold detects
     """
     return combine_binary(sobel_x_binary(img),hls_s_binary(img))
 
-def perspective_transform_values(tl=-55, tr=55, bl=-10, br=60, img_size=(1280, 720)):
+def perspective_transform_values(tl=-60, tr=60, bl=-10, br=40, img_size=(1280, 720)):
     """
     Creates perspective transform values
     """
@@ -186,13 +186,20 @@ def find_window_centroids(warped, window_width=50, window_height=80, margin=100)
     return window_centroids
 
 def window_mask(width, height, img_ref, center,level):
+    """
+    Create a mask for a window region
+    """
     output = np.zeros_like(img_ref)
-    output[int(img_ref.shape[0]-(level+1)*height):int(img_ref.shape[0]-level*height),max(0,int(center-width/2)):min(int(center+width/2),img_ref.shape[1])] = 1
+    y_start = int(img_ref.shape[0]-(level+1)*height)
+    y_end = int(img_ref.shape[0]-level*height)
+    x_start = max(0,int(center-width/2))
+    x_end = min(int(center+width/2),img_ref.shape[1])
+    output[y_start:y_end, x_start:x_end] = 1
     return output
 
-def draw_window_centroids(warped, window_centroids, window_width=50, window_height=80):
+def lane_mask(warped, window_centroids, window_width=50, window_height=80):
     """
-    Identify lane lines in a binary image
+    Create the mask for the right and left lane
     """
     # Points used to draw all the left and right windows
     l_points = np.zeros_like(warped)
@@ -207,11 +214,22 @@ def draw_window_centroids(warped, window_centroids, window_width=50, window_heig
         l_points[(l_points == 255) | ((l_mask == 1) ) ] = 255
         r_points[(r_points == 255) | ((r_mask == 1) ) ] = 255
 
-    # Draw the results
-    template = np.array(r_points+l_points,np.uint8) # add both left and right window pixels together
-    zero_channel = np.zeros_like(template) # create a zero color channle 
-    template = np.array(cv2.merge((zero_channel,template,zero_channel)),np.uint8) # make window pixels green
-    warpage = np.array(cv2.merge((warped*255,warped*255,warped*255)),np.uint8) # making the original road pixels 3 color channels
-    output = cv2.addWeighted(warpage, 1.0, template, 0.5, 0.0) # overlay the orignal road image with window results
-    return output
+    return l_points, r_points
+    
+class find_land_lines():
+    """
+    find image lane line for given camera calibartion and perspective transform values
+    """
+    def __init__(self, mtx, dist, src, dst, M):
+        self.mtx = mtx
+        self.dist = dist
+        self.src = src
+        self.dst = dst
+        self.M = M
+        
+    def fll(self, img):
+        undist = undistort(img, self.mtx, self.dist)
+        thresh = threshold(undist)
+        pt = perspective_transform(thresh, self.M)
+        return pt
     
