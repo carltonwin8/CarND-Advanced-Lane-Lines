@@ -3,3 +3,4 @@ _templates/
 _build/
 src/__pycache__/
 README.html
+tmp/

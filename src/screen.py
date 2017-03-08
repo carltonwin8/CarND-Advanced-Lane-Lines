@@ -9,49 +9,63 @@ import lane_line as ll
 import utils as utl
 
 
-def imshow(img, show=True, cmap=None):
+def imshow(img, cmap=None, show=True):
     if show:
         if cmap == None:
-            plt.imshow(img)
+            plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         else:
             plt.imshow(img, cmap="gray")
         plt.show()
+
+def undistort1(fn, mtx, dist, execute):
+    if execute:
+        img_dist = cv2.imread(fn)
+        img_undist = ll.undistort(img_dist, mtx, dist)
+        imshow(img_dist)
+        imshow(img_undist)
     
 
+def undistort(execute):
+    if execute:
+        mtx, dist = utl.distort_load(utl.fn.pickle_file)
+        undistort1(utl.fn.cal_test_img, mtx, dist, False)
+        undistort1(utl.fn.test_img1, mtx, dist, False)
+
+def edge_detect(execute):
+    if execute:
+        img = cv2.imread(utl.fn.test_img1_undist)
+        img_sx_b = ll.sobel_x_binary(img)
+        imshow(img_sx_b, cmap='gray', show=True)
+        img_hls_sb = ll.hls_s_binary(img)
+        imshow(img_hls_sb, cmap='gray', show=True)
+        img_sxb = ll.combine_binary(img_sx_b, img_hls_sb)
+        imshow(img_sxb, cmap='gray', show=True)
+        imshow(utl.bin22color(img_sx_b, img_hls_sb), show=True)
+
+def transform(execute):
+    if execute:
+        fn = utl.fn.test_img1_sxs
+        img = cv2.imread(fn)
+        pt = utl.perspective_transform()
+        pt.tl = -60
+        pt.tr = 60
+        pt.br = 40
+        imshow(pt.transform_l(img))
+        print(pt.src)
+        print(pt.dst)
+        
+def identify_line(execute):
+        centroids = ll.find_window_centroids(img_sxb_ptc)
+        print(len(centroids))
+        
 def main():
     """
     Displays processed images on screen to verify they the image pipeline
     """
-    #mtx, dist = ll.calibrate('../camera_cal/calibration*.jpg')
-    pickle = '../dist_pickle.p'
-    #utl.distort_save(pickle, mtx, dist)
-    mtx, dist = utl.distort_load(pickle)
-    cal_test_img = '../camera_cal/calibration1.jpg'
-    img_dist = cv2.imread(cal_test_img)
-    img_undist = ll.undistort(img_dist, mtx, dist)
-    imshow(img_dist, show=False)
-    imshow(img_undist, show=False)
-    img_name = '../output_images/straight_lines1_undist.jpg' # undistorted image
-    img = ll.undistort(cv2.imread(img_name), mtx, dist)
-    imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB), show=False)
-    img_sx_b = ll.sobel_x_binary(img)
-    imshow(img_sx_b, cmap='gray', show=False)
-    img_hls_sb = ll.hls_s_binary(img)
-    imshow(img_hls_sb, cmap='gray', show=False)
-    img_sxb = ll.combine_binary(img_sx_b, img_hls_sb)
-    imshow(img_sxb, cmap='gray', show=False)
-    img_pt = utl.perspective_transform(img)
-    imshow(img_pt, show=False)
-    img_sxb_pt = utl.perspective_transform(img_sxb)
-    imshow(img_sxb_pt, cmap='gray', show=False)
-    src, dst = ll.perspective_transform_values()
-    lines = ll.create_lines(src)
-    imshow(cv2.cvtColor(ll.draw_lines(img, lines), cv2.COLOR_BGR2RGB),show=False)
-    img_sxb_ptc = ll.bin2color(img_sxb_pt)
-    imshow(img_sxb_ptc, show=False)
-    img_sxb_ptc_l = ll.draw_lines(img_sxb_ptc, ll.create_lines(dst))
-    imshow(img_sxb_ptc_l, show=True)
-    centroids = ll.find_window_centroids(img_sxb_ptc)
-    print(len(centroids))
+    utl.calibrate(False)
+    undistort(False)
+    edge_detect(False)
+    transform(True)
+
 if __name__ == "__main__":
     main()

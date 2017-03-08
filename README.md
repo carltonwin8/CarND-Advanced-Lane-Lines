@@ -1,9 +1,24 @@
 # Advanced Lane Finding Projects
 
-The pre-fork README can be found [here](README_ori.md).
-This README contains my notes for the project at
-the [github.com](http://github.com) repository
+This README contains notes for the project hosted at the repository
 [here](https://github.com/carltonwin8/CarND-Advanced-Lane-Lines).
+This project is my completion of the Udacity project template provided at
+[this](https://github.com/udacity/CarND-Advanced-Lane-Lines)
+repository.
+
+The project code was developed using the
+[spyder IDE](https://pythonhosted.org/spyder/)
+and is maded up of the following files.
+
+  - [lane_line.py](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html) -
+    The main lane line identification procedures.
+  - [files.py](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/files.html) -
+    Script used to generate the pictures for this document.
+  - [screen.py](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/screen.html) -
+    Script used during the development and debug phase.
+  - [utils.py](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/utils.html) -
+    Utility procedures that are not part of the main lane line identification procedures.
+
 
 The steps of this project are the following:
 
@@ -30,14 +45,14 @@ successful chessboard detection.
 I then used the output `objpoints` and `imgpoints` to compute the camera
 calibration and distortion coefficients using the `cv2.calibrateCamera()`
 function.
-The code for these operation is in the
+The code for these operations is in the
 [calibrateCamera](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html#calibrate)
 function.
 
 I applied this distortion correction to the test image using the
 `cv2.undistort()` function and obtained these result:
-The code for these operation is in the
-[Test Camera Calibration With Images](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html#undistort)
+The code for this operation is in the
+[undistort](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html#undistort)
 function.
 The following images shows the test results.
 
@@ -50,29 +65,36 @@ The following images shows the test results.
 I used the sobel X gradient thresholds _anded_ with the HLS color space S
 channel threshold to generate a binary image.
 The code for these operation is in the
-[Test Camera Calibration With Images](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html#undistort)
-[Threshold binary image creating via color transform and gradient](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines#thresholds)
-cell.
-The following images shows the results from this step.
+[sobel_x_binary](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html#sobel_x_binary),
+[hls_s_binary](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html#hls_s_binary),
+[combine_binary](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html#combine_binary) and
+[edge_detect](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html#edge_detect)
+functions.
+The following images shows the intermediate results from these steps.
 
-| sobel x | hls s | x s AND color | x s AND
+| sobel x | hls s | x or'ed s color | x or'ed s
 |:---:|:---:|:---:|:---:|
-| ![](output_images/binary_sobel_x.jpg) | ![](output_images/binary_hls_s.jpg) | ![](output_images/binary_sx_color.jpg) | ![](output_images/binary_sx.jpg) |
+| ![](output_images/straight_lines1_sobel_x.jpg) | ![](output_images/straight_lines1_hls_s.jpg) | ![](output_images/straight_lines1_sxs_c.jpg) | ![](output_images/straight_lines1_sxs.jpg) |
 
 ## Perspective Transform
 
 The code for this operation is in the
-[Perspective Transform](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines#perspectiveTransform)
-cell.
+[perspective_transform_values](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html#perspective_transform_values),
+[perspective_transform_map](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html#hperspective_transform_map) and
+[perspective_transform](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/lane_line.html#perspective_transform)
+functions.
 The `cv2.getPerspectiveTransform()` function creates a transform from the
 source (`src`) and destination (`dst`) points noted below.
-
+The values shown below were optimized on the first test image using the
+[files-transform](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/files.html#transform) and
+[utils-perspective_transform](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/utils.html#perspective_transform)
+utilities:
 ```python
 src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
+    [[(img_size[0] / 2) - 60, img_size[1] / 2 + 100],
     [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
+    [(img_size[0] * 5 / 6) + 40, img_size[1]],
+    [(img_size[0] / 2 + 60), img_size[1] / 2 + 100]])
 dst = np.float32(
     [[(img_size[0] / 4), 0],
     [(img_size[0] / 4), img_size[1]],
@@ -84,16 +106,16 @@ This resulted in the following source and destination points:
 
 | Source        | Destination   |
 |:-------------:|:-------------:|
-| 585, 460      | 320, 0        |
+| 580, 460      | 320, 0        |
 | 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+| 1106, 720     | 960, 720      |
+| 700, 460      | 960, 0        |
 
 The transform was tested on the images noted below to verify that the lines appear parallel in the warped image.
 
 | not transformed | transformed | sobel x OR'ed hls s
 |:---:|:---:|:---:|
-| ![](test_images/straight_lines1.jpg) | ![](output_images/straight_lines1_transform.jpg) | ![](output_images/binary_sx_transform.jpg) |
+| ![](test_images/straight_lines1.jpg) | ![](output_images/straight_lines1_trans.jpg) | ![](output_images/straight_lines1_sxs_trans.jpg) |
 
 ####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
@@ -128,8 +150,3 @@ Here's a [link to my video result](./project_video.mp4)
 Here I'll talk about the approach I took, what techniques I used, what worked
 and why, where the pipeline might fail and how I might improve it if I were
 going to pursue this project further.  
-
-## TODO
-
-  - see if i can get the overlay the `src` and `dst` points on the transformed
-    and non-transformed images.

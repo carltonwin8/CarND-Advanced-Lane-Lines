@@ -4,8 +4,32 @@
 @author: Carlton Joseph
 """
 import pickle
+import numpy as np
+import cv2
 import lane_line as ll
 
+class fn():
+    """
+    Class to contain all the file names used by screen.py and files.py
+    """
+    pickle_file = '../dist_pickle.p'
+    cal_glob = '../camera_cal/calibration*.jpg'
+    cal_test_img = '../camera_cal/calibration1.jpg'
+    cal_test_img_undist = '../output_images/calibration1_undist.jpg'
+    test_img1 = '../test_images/straight_lines1.jpg'
+    test_img1_undist = '../output_images/straight_lines1_undist.jpg'
+    test_img1_sobel_x = '../output_images/straight_lines1_sobel_x.jpg'
+    test_img1_hls_s = '../output_images/straight_lines1_hls_s.jpg'
+    test_img1_sxs = '../output_images/straight_lines1_sxs.jpg'
+    test_img1_sxs_c = '../output_images/straight_lines1_sxs_c.jpg'
+    test_img1_trans = '../output_images/straight_lines1_trans.jpg'
+    test_img1_sxs_trans = '../output_images/straight_lines1_sxs_trans.jpg'
+    
+    def temp(name, post):
+        base = name.split('/')[-1]
+        no_ext = base.split('.')[0]
+        return '../tmp/' + no_ext + '_' + post +'.jpg'
+    
 def distort_save(file, mtx, dist):
     """
     Saves a distortion matrix to a file
@@ -30,7 +54,49 @@ def distort_load(file):
     dist_pickle = pickle.load(open(file, "rb"))
     return dist_pickle['mtx'], dist_pickle['dist']
 
-def perspective_transform(img):
-    src, dst = ll.perspective_transform_values()
-    warped = ll.perspective_transform(img,ll.perspective_transform_map(src, dst))
-    return warped
+def calibrate(execute):
+    if execute:
+        mtx, dist = ll.calibrate(fn.cal_glob)
+        distort_save(fn.pickle_file, mtx, dist)
+        
+def bin2color(img):
+    """
+    Converts a binary image to a full scale RGB Image
+    """
+    img255 = img*255
+    rgb255 = np.dstack((img255, img255, img255))
+    return rgb255
+
+def bin22color(img1, img2):
+    """
+    Converts two binary image to a full scale RGB image with 
+    """
+    return np.dstack((img1*255, np.zeros_like(img1), img2*255))
+
+class perspective_transform():
+    def __init__(self, tl=-55, bl=-10, br=60, tr=55, size=(1280, 720)):
+        self.tl = tl
+        self.bl = bl
+        self.br = br
+        self.tr = tr
+        self.img_size = (1280, 720)
+        self.src = None
+        self.dst = None 
+        
+    def transform(self, img):
+        src, dst = ll.perspective_transform_values(self.tl, self.tr, self.bl, self.br, self.img_size)
+        M = ll.perspective_transform_map(src, dst)
+        self.src, self.dst = src, dst
+        return cv2.warpPerspective(img, M, self.img_size)
+        
+    def transform_l(self, img):
+        src, dst = ll.perspective_transform_values(self.tl, self.tr, self.bl, self.br, self.img_size)
+        M = ll.perspective_transform_map(src, dst)
+        persp = cv2.warpPerspective(img, M, self.img_size)
+        lines = ll.create_lines(dst)
+        perspll = ll.draw_lines(persp, lines)
+        self.src, self.dst = src, dst
+        return perspll
+    
+    def file_post(self):
+        return str(self.tl) + str(self.tr) + str(self.bl) + str(self.br)

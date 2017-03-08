@@ -7,31 +7,61 @@ import cv2
 import lane_line as ll
 import utils as utl
 
-def add_file_name_ps(file, insert):
-    """
-    :param file: file storage path
-    :param insert: text to insert into path
-    """
-    paths = file.split('/')
-    pre_post = paths[-1].split('.')
-    return '../output_images/' + pre_post[0] + '_' + insert + '.' + pre_post[1]
+
+def undistort(execute):
+    if execute:
+        mtx, dist = utl.distort_load(utl.fn.pickle_file)
+        cal_test_img_dist = cv2.imread(utl.fn.cal_test_img)
+        cal_test_img_undist = ll.undistort(cal_test_img_dist, mtx, dist)
+        test_img1_dist = cv2.imread(utl.fn.test_img1)
+        test_img1_undist = ll.undistort(test_img1_dist, mtx, dist)
+        cv2.imwrite(utl.fn.cal_test_img_undist, cal_test_img_undist)
+        cv2.imwrite(utl.fn.test_img1_undist, test_img1_undist)
+
+def edge_detect(execute):
+    if execute:
+        img = cv2.imread(utl.fn.test_img1_undist)
+        img_sx_b = ll.sobel_x_binary(img)
+        cv2.imwrite(utl.fn.test_img1_sobel_x, img_sx_b*255)
+        img_hls_sb = ll.hls_s_binary(img)
+        cv2.imwrite(utl.fn.test_img1_hls_s, img_hls_sb*255)
+        img_sxb = ll.combine_binary(img_sx_b, img_hls_sb)
+        cv2.imwrite(utl.fn.test_img1_sxs, img_sxb*255)
+        img_sxbc = utl.bin22color(img_hls_sb, img_sxb)
+        cv2.imwrite(utl.fn.test_img1_sxs_c, img_sxbc)
+       
+def transform(execute):
+    if execute:
+        fn = utl.fn.test_img1_sxs
+        img = cv2.imread(fn)
+        pt = utl.perspective_transform()
+        pt.tl = -60
+        pt.tr = 60
+        pt.br = 40
+        tuning = False
+        if tuning == True: # temp storage during tuning above values
+            out_fn = utl.fn.temp(fn, pt.file_post())
+            cv2.imwrite(out_fn, pt.transform_l(img))
+        else:
+            out_fn = utl.fn.test_img1_sxs_trans
+            cv2.imwrite(out_fn, pt.transform_l(img))
+            cv2.imwrite(utl.fn.test_img1_trans, pt.transform_l(cv2.imread(utl.fn.test_img1_undist)))
+        
+def identify_line(execute):
+    if execute:
+        img = cv2.imread(utl.fn.test_img1_sxs_trans)
+        centroids = ll.find_window_centroids(img)
+        print(len(centroids))
 
 def main():
     """
-    Generate image file for documentation
+    Generate image files for the documentation
     """
-    mtx, dist = ll.calibrate('../camera_cal/calibration*.jpg')
-    pickle_file = '../dist_pickle.p'
-    utl.distort_save(pickle_file, mtx, dist)
-    mtx, dist = utl.distort_load(pickle_file)
-    cal_test_img_fn = '../camera_cal/calibration1.jpg'
-    cal_test_img_dist = cv2.imread(cal_test_img_fn)
-    cal_test_img_undist = ll.undistort(cal_test_img_dist, mtx, dist)
-    test_img1_fn = '../test_images/straight_lines1.jpg'
-    test_img1_dist = cv2.imread(test_img1_fn)
-    test_img1_undist = ll.undistort(test_img1_dist, mtx, dist)
-    cv2.imwrite(add_file_name_ps(cal_test_img_fn, 'undist'), cal_test_img_undist)
-    cv2.imwrite(add_file_name_ps(test_img1_fn, 'undist'), test_img1_undist)
+    utl.calibrate(False)
+    undistort(False)    
+    edge_detect(False)
+    transform(True)
+    identify_line(False)
 
 if __name__ == "__main__":
     main()

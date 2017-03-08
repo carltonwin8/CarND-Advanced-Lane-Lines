@@ -98,15 +98,21 @@ def combine_binary(img1, img2):
     combined_binary[(img1 == 1) | (img2 == 1)] = 1
     return combined_binary
 
-def perspective_transform_values(img_size=(1280, 720)):
+def edge_detect(img):
     """
-    Gets perspective values
+    Detects the edges by ORing the sobel x and hls s channel threshold detects
+    """
+    return combine_binary(sobel_x_binary(img),hls_s_binary(img))
+
+def perspective_transform_values(tl=-55, tr=55, bl=-10, br=60, img_size=(1280, 720)):
+    """
+    Creates perspective transform values
     """
     src = np.float32(
-        [[(img_size[0] / 2) - 65, img_size[1] / 2 + 100],
-        [((img_size[0] / 6) - 10), img_size[1]],
-        [(img_size[0] * 5 / 6) + 60, img_size[1]],
-        [(img_size[0] / 2 + 65), img_size[1] / 2 + 100]])
+        [[(img_size[0] / 2) + tl, img_size[1] / 2 + 100],
+        [((img_size[0] / 6) + bl), img_size[1]],
+        [(img_size[0] * 5 / 6) + br, img_size[1]],
+        [(img_size[0] / 2 + tr), img_size[1] / 2 + 100]])
     dst = np.float32(
         [[(img_size[0] / 4), 0],
         [(img_size[0] / 4), img_size[1]],
@@ -140,14 +146,6 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=10, weights=(0.5, 0.5)):
             cv2.line(img2, (x1, y1), (x2, y2), color, thickness)
     return cv2.addWeighted(img, weights[0], img2, weights[1], 0)
     
-def bin2color(img):
-    """
-    Converts a binary image to a full scale RGB Image
-    """
-    img255 = img*255
-    rgb255 = np.dstack((img255, img255, img255))
-    return rgb255
-
 def find_window_centroids(warped, window_width=50, window_height=80, margin=100):
     """
     Find the center of the lane lines
