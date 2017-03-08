@@ -27,7 +27,7 @@
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="screen module" href="screen.html" />
+    <link rel="next" title="lecture18_v33_findLines module" href="lecture18_v33_findLines.html" />
     <link rel="prev" title="files module" href="files.html" /> 
   </head>
   <body role="document">
@@ -42,7 +42,7 @@
         &#160;&#160;::&#160;&#160;
         <a class="uplink" href="../index.html">Contents</a>
         &#160;&#160;::&#160;&#160;
-        <a href="screen.html">screen module</a>&#160;&#160;»
+        <a href="lecture18_v33_findLines.html">lecture18_v33_findLines module</a>&#160;&#160;»
         </p>
 
       </div>
@@ -93,16 +93,16 @@
 <code class="descclassname">lane_line.</code><code class="descname">draw_lines</code><span class="sig-paren">(</span><em>img, lines, color=[255, 0, 0], thickness=10, weights=(0.5, 0.5)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#draw_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.draw_lines" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
-<dl class="function">
-<dt id="lane_line.draw_window_centroids">
-<code class="descclassname">lane_line.</code><code class="descname">draw_window_centroids</code><span class="sig-paren">(</span><em>warped</em>, <em>window_centroids</em>, <em>window_width=50</em>, <em>window_height=80</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#draw_window_centroids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.draw_window_centroids" title="Permalink to this definition">¶</a></dt>
-<dd><p>Identify lane lines in a binary image</p>
-</dd></dl>
+<dl class="class">
+<dt id="lane_line.find_land_lines">
+<em class="property">class </em><code class="descclassname">lane_line.</code><code class="descname">find_land_lines</code><span class="sig-paren">(</span><em>mtx</em>, <em>dist</em>, <em>src</em>, <em>dst</em>, <em>M</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_land_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_land_lines" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>find image lane line for given camera calibartion and perspective transform values</p>
+<dl class="method">
+<dt id="lane_line.find_land_lines.fll">
+<code class="descname">fll</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_land_lines.fll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_land_lines.fll" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
-<dl class="function">
-<dt id="lane_line.edge_detect">
-<code class="descclassname">lane_line.</code><code class="descname">edge_detect</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#edge_detect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.edge_detect" title="Permalink to this definition">¶</a></dt>
-<dd><p>Detects the edges by ORing the sobel x and hls s channel threshold detects</p>
 </dd></dl>
 
 <dl class="function">
@@ -134,6 +134,12 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="lane_line.lane_mask">
+<code class="descclassname">lane_line.</code><code class="descname">lane_mask</code><span class="sig-paren">(</span><em>warped</em>, <em>window_centroids</em>, <em>window_width=50</em>, <em>window_height=80</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#lane_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.lane_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the mask for the right and left lane</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="lane_line.perspective_transform">
 <code class="descclassname">lane_line.</code><code class="descname">perspective_transform</code><span class="sig-paren">(</span><em>img</em>, <em>M</em>, <em>img_size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#perspective_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.perspective_transform" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -145,7 +151,7 @@
 
 <dl class="function">
 <dt id="lane_line.perspective_transform_values">
-<code class="descclassname">lane_line.</code><code class="descname">perspective_transform_values</code><span class="sig-paren">(</span><em>tl=-55</em>, <em>tr=55</em>, <em>bl=-10</em>, <em>br=60</em>, <em>img_size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#perspective_transform_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.perspective_transform_values" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">lane_line.</code><code class="descname">perspective_transform_values</code><span class="sig-paren">(</span><em>tl=-60</em>, <em>tr=60</em>, <em>bl=-10</em>, <em>br=40</em>, <em>img_size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#perspective_transform_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.perspective_transform_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates perspective transform values</p>
 </dd></dl>
 
@@ -169,6 +175,12 @@
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="function">
+<dt id="lane_line.threshold">
+<code class="descclassname">lane_line.</code><code class="descname">threshold</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#threshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.threshold" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detects the edges by ORing the sobel x and hls s channel threshold detects</p>
 </dd></dl>
 
 <dl class="function">
@@ -196,7 +208,8 @@
 <dl class="function">
 <dt id="lane_line.window_mask">
 <code class="descclassname">lane_line.</code><code class="descname">window_mask</code><span class="sig-paren">(</span><em>width</em>, <em>height</em>, <em>img_ref</em>, <em>center</em>, <em>level</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#window_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.window_mask" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create a mask for a window region</p>
+</dd></dl>
 
 </div>
 
@@ -209,7 +222,7 @@
         &#160;&#160;::&#160;&#160;
         <a class="uplink" href="../index.html">Contents</a>
         &#160;&#160;::&#160;&#160;
-        <a href="screen.html">screen module</a>&#160;&#160;»
+        <a href="lecture18_v33_findLines.html">lecture18_v33_findLines module</a>&#160;&#160;»
         </p>
 
       </div>

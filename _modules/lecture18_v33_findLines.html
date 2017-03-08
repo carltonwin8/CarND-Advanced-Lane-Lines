@@ -1,0 +1,230 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lecture18_v33_findLines &#8212; Advanced Lane Lines Project 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>Advanced Lane Lines Project 0.0.1 documentation</span></a></h1>
+        <h2 class="heading"><span>lecture18_v33_findLines</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <h1>Source code for lecture18_v33_findLines</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">utils</span> <span class="k">as</span> <span class="nn">utl</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../rst/lecture18_v33_findLines.html#lecture18_v33_findLines.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">utl</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="n">test_img1</span><span class="p">)</span>
+    <span class="n">binary_warped</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">utl</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="n">test_img1_sxs_trans_nl</span><span class="p">)[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">255</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">binary_warped</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="c1">## use to get histogram for part of the binary image</span>
+    <span class="n">histogram</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">binary_warped</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">):,:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">histogram</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="c1">## sliding window implementation</span>
+
+
+    <span class="c1"># Assuming you have created a warped binary image called &quot;binary_warped&quot;</span>
+    <span class="c1"># Take a histogram of the bottom half of the image</span>
+    <span class="n">histogram</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">binary_warped</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">binary_warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">):,:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># Create an output image to draw on and  visualize the result</span>
+    <span class="n">out_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">binary_warped</span><span class="p">,</span> <span class="n">binary_warped</span><span class="p">,</span> <span class="n">binary_warped</span><span class="p">))</span><span class="o">*</span><span class="mi">255</span>
+    <span class="c1"># Find the peak of the left and right halves of the histogram</span>
+    <span class="c1"># These will be the starting point for the left and right lines</span>
+    <span class="n">midpoint</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">histogram</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">leftx_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">histogram</span><span class="p">[:</span><span class="n">midpoint</span><span class="p">])</span>
+    <span class="n">rightx_base</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">histogram</span><span class="p">[</span><span class="n">midpoint</span><span class="p">:])</span> <span class="o">+</span> <span class="n">midpoint</span>
+
+    <span class="c1"># Choose the number of sliding windows</span>
+    <span class="n">nwindows</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="c1"># Set height of windows</span>
+    <span class="n">window_height</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">binary_warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">nwindows</span><span class="p">)</span>
+    <span class="c1"># Identify the x and y positions of all nonzero pixels in the image</span>
+    <span class="n">nonzero</span> <span class="o">=</span> <span class="n">binary_warped</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span>
+    <span class="n">nonzeroy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nonzero</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">nonzerox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nonzero</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># Current positions to be updated for each window</span>
+    <span class="n">leftx_current</span> <span class="o">=</span> <span class="n">leftx_base</span>
+    <span class="n">rightx_current</span> <span class="o">=</span> <span class="n">rightx_base</span>
+    <span class="c1"># Set the width of the windows +/- margin</span>
+    <span class="n">margin</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="c1"># Set minimum number of pixels found to recenter window</span>
+    <span class="n">minpix</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="c1"># Create empty lists to receive left and right lane pixel indices</span>
+    <span class="n">left_lane_inds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">right_lane_inds</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># Step through the windows one by one</span>
+    <span class="k">for</span> <span class="n">window</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nwindows</span><span class="p">):</span>
+        <span class="c1"># Identify window boundaries in x and y (and right and left)</span>
+        <span class="n">win_y_low</span> <span class="o">=</span> <span class="n">binary_warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">window</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">window_height</span>
+        <span class="n">win_y_high</span> <span class="o">=</span> <span class="n">binary_warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">window</span><span class="o">*</span><span class="n">window_height</span>
+        <span class="n">win_xleft_low</span> <span class="o">=</span> <span class="n">leftx_current</span> <span class="o">-</span> <span class="n">margin</span>
+        <span class="n">win_xleft_high</span> <span class="o">=</span> <span class="n">leftx_current</span> <span class="o">+</span> <span class="n">margin</span>
+        <span class="n">win_xright_low</span> <span class="o">=</span> <span class="n">rightx_current</span> <span class="o">-</span> <span class="n">margin</span>
+        <span class="n">win_xright_high</span> <span class="o">=</span> <span class="n">rightx_current</span> <span class="o">+</span> <span class="n">margin</span>
+        <span class="c1"># Draw the windows on the visualization image</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">out_img</span><span class="p">,(</span><span class="n">win_xleft_low</span><span class="p">,</span><span class="n">win_y_low</span><span class="p">),(</span><span class="n">win_xleft_high</span><span class="p">,</span><span class="n">win_y_high</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">out_img</span><span class="p">,(</span><span class="n">win_xright_low</span><span class="p">,</span><span class="n">win_y_low</span><span class="p">),(</span><span class="n">win_xright_high</span><span class="p">,</span><span class="n">win_y_high</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># Identify the nonzero pixels in x and y within the window</span>
+        <span class="n">good_left_inds</span> <span class="o">=</span> <span class="p">((</span><span class="n">nonzeroy</span> <span class="o">&gt;=</span> <span class="n">win_y_low</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nonzeroy</span> <span class="o">&lt;</span> <span class="n">win_y_high</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nonzerox</span> <span class="o">&gt;=</span> <span class="n">win_xleft_low</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nonzerox</span> <span class="o">&lt;</span> <span class="n">win_xleft_high</span><span class="p">))</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">good_right_inds</span> <span class="o">=</span> <span class="p">((</span><span class="n">nonzeroy</span> <span class="o">&gt;=</span> <span class="n">win_y_low</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nonzeroy</span> <span class="o">&lt;</span> <span class="n">win_y_high</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nonzerox</span> <span class="o">&gt;=</span> <span class="n">win_xright_low</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nonzerox</span> <span class="o">&lt;</span> <span class="n">win_xright_high</span><span class="p">))</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># Append these indices to the lists</span>
+        <span class="n">left_lane_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">good_left_inds</span><span class="p">)</span>
+        <span class="n">right_lane_inds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">good_right_inds</span><span class="p">)</span>
+        <span class="c1"># If you found &gt; minpix pixels, recenter next window on their mean position</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_left_inds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">minpix</span><span class="p">:</span>
+            <span class="n">leftx_current</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">nonzerox</span><span class="p">[</span><span class="n">good_left_inds</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">good_right_inds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">minpix</span><span class="p">:</span>
+            <span class="n">rightx_current</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">nonzerox</span><span class="p">[</span><span class="n">good_right_inds</span><span class="p">]))</span>
+
+    <span class="c1"># Concatenate the arrays of indices</span>
+    <span class="n">left_lane_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">left_lane_inds</span><span class="p">)</span>
+    <span class="n">right_lane_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">right_lane_inds</span><span class="p">)</span>
+
+    <span class="c1"># Extract left and right line pixel positions</span>
+    <span class="n">leftx</span> <span class="o">=</span> <span class="n">nonzerox</span><span class="p">[</span><span class="n">left_lane_inds</span><span class="p">]</span>
+    <span class="n">lefty</span> <span class="o">=</span> <span class="n">nonzeroy</span><span class="p">[</span><span class="n">left_lane_inds</span><span class="p">]</span>
+    <span class="n">rightx</span> <span class="o">=</span> <span class="n">nonzerox</span><span class="p">[</span><span class="n">right_lane_inds</span><span class="p">]</span>
+    <span class="n">righty</span> <span class="o">=</span> <span class="n">nonzeroy</span><span class="p">[</span><span class="n">right_lane_inds</span><span class="p">]</span>
+
+    <span class="c1"># Fit a second order polynomial to each</span>
+    <span class="n">left_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">lefty</span><span class="p">,</span> <span class="n">leftx</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">right_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">righty</span><span class="p">,</span> <span class="n">rightx</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+
+
+    <span class="c1">## visulization of sliding windows</span>
+
+    <span class="c1"># Generate x and y values for plotting</span>
+    <span class="n">ploty</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">binary_warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">binary_warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+    <span class="n">left_fitx</span> <span class="o">=</span> <span class="n">left_fit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">ploty</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">left_fit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">ploty</span> <span class="o">+</span> <span class="n">left_fit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">right_fitx</span> <span class="o">=</span> <span class="n">right_fit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">ploty</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">right_fit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">ploty</span> <span class="o">+</span> <span class="n">right_fit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">out_img</span><span class="p">[</span><span class="n">nonzeroy</span><span class="p">[</span><span class="n">left_lane_inds</span><span class="p">],</span> <span class="n">nonzerox</span><span class="p">[</span><span class="n">left_lane_inds</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">out_img</span><span class="p">[</span><span class="n">nonzeroy</span><span class="p">[</span><span class="n">right_lane_inds</span><span class="p">],</span> <span class="n">nonzerox</span><span class="p">[</span><span class="n">right_lane_inds</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">out_img</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">left_fitx</span><span class="p">,</span> <span class="n">ploty</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">right_fitx</span><span class="p">,</span> <span class="n">ploty</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1280</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">720</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+    <span class="c1">## for next frame search around previous frames sliding window</span>
+
+    <span class="c1"># Assume you now have a new warped binary image</span>
+    <span class="c1"># from the next frame of video (also called &quot;binary_warped&quot;)</span>
+    <span class="c1"># It&#39;s now much easier to find line pixels!</span>
+    <span class="n">nonzero</span> <span class="o">=</span> <span class="n">binary_warped</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()</span>
+    <span class="n">nonzeroy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nonzero</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">nonzerox</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nonzero</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">margin</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">left_lane_inds</span> <span class="o">=</span> <span class="p">((</span><span class="n">nonzerox</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">left_fit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">nonzeroy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">left_fit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">nonzeroy</span> <span class="o">+</span> <span class="n">left_fit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">margin</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nonzerox</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">left_fit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">nonzeroy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">left_fit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">nonzeroy</span> <span class="o">+</span> <span class="n">left_fit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">margin</span><span class="p">)))</span>
+    <span class="n">right_lane_inds</span> <span class="o">=</span> <span class="p">((</span><span class="n">nonzerox</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">right_fit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">nonzeroy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">right_fit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">nonzeroy</span> <span class="o">+</span> <span class="n">right_fit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">margin</span><span class="p">))</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">nonzerox</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">right_fit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">nonzeroy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">right_fit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">nonzeroy</span> <span class="o">+</span> <span class="n">right_fit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">margin</span><span class="p">)))</span>
+
+    <span class="c1"># Again, extract left and right line pixel positions</span>
+    <span class="n">leftx</span> <span class="o">=</span> <span class="n">nonzerox</span><span class="p">[</span><span class="n">left_lane_inds</span><span class="p">]</span>
+    <span class="n">lefty</span> <span class="o">=</span> <span class="n">nonzeroy</span><span class="p">[</span><span class="n">left_lane_inds</span><span class="p">]</span>
+    <span class="n">rightx</span> <span class="o">=</span> <span class="n">nonzerox</span><span class="p">[</span><span class="n">right_lane_inds</span><span class="p">]</span>
+    <span class="n">righty</span> <span class="o">=</span> <span class="n">nonzeroy</span><span class="p">[</span><span class="n">right_lane_inds</span><span class="p">]</span>
+    <span class="c1"># Fit a second order polynomial to each</span>
+    <span class="n">left_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">lefty</span><span class="p">,</span> <span class="n">leftx</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">right_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">righty</span><span class="p">,</span> <span class="n">rightx</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="c1"># Generate x and y values for plotting</span>
+    <span class="n">ploty</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">binary_warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">binary_warped</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">)</span>
+    <span class="n">left_fitx</span> <span class="o">=</span> <span class="n">left_fit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">ploty</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">left_fit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">ploty</span> <span class="o">+</span> <span class="n">left_fit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">right_fitx</span> <span class="o">=</span> <span class="n">right_fit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">ploty</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">right_fit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">ploty</span> <span class="o">+</span> <span class="n">right_fit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+
+    <span class="c1">## Visulization</span>
+
+    <span class="c1"># Create an image to draw on and an image to show the selection window</span>
+    <span class="n">out_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">binary_warped</span><span class="p">,</span> <span class="n">binary_warped</span><span class="p">,</span> <span class="n">binary_warped</span><span class="p">))</span><span class="o">*</span><span class="mi">255</span>
+    <span class="n">window_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">out_img</span><span class="p">)</span>
+    <span class="c1"># Color in left and right line pixels</span>
+    <span class="n">out_img</span><span class="p">[</span><span class="n">nonzeroy</span><span class="p">[</span><span class="n">left_lane_inds</span><span class="p">],</span> <span class="n">nonzerox</span><span class="p">[</span><span class="n">left_lane_inds</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">out_img</span><span class="p">[</span><span class="n">nonzeroy</span><span class="p">[</span><span class="n">right_lane_inds</span><span class="p">],</span> <span class="n">nonzerox</span><span class="p">[</span><span class="n">right_lane_inds</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+
+    <span class="c1"># Generate a polygon to illustrate the search window area</span>
+    <span class="c1"># And recast the x and y points into usable format for cv2.fillPoly()</span>
+    <span class="n">left_line_window1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">left_fitx</span><span class="o">-</span><span class="n">margin</span><span class="p">,</span> <span class="n">ploty</span><span class="p">]))])</span>
+    <span class="n">left_line_window2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">left_fitx</span><span class="o">+</span><span class="n">margin</span><span class="p">,</span> <span class="n">ploty</span><span class="p">])))])</span>
+    <span class="n">left_line_pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">left_line_window1</span><span class="p">,</span> <span class="n">left_line_window2</span><span class="p">))</span>
+    <span class="n">right_line_window1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">right_fitx</span><span class="o">-</span><span class="n">margin</span><span class="p">,</span> <span class="n">ploty</span><span class="p">]))])</span>
+    <span class="n">right_line_window2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">right_fitx</span><span class="o">+</span><span class="n">margin</span><span class="p">,</span> <span class="n">ploty</span><span class="p">])))])</span>
+    <span class="n">right_line_pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">right_line_window1</span><span class="p">,</span> <span class="n">right_line_window2</span><span class="p">))</span>
+
+    <span class="c1"># Draw the lane onto the warped blank image</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">fillPoly</span><span class="p">(</span><span class="n">window_img</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">([</span><span class="n">left_line_pts</span><span class="p">]),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">fillPoly</span><span class="p">(</span><span class="n">window_img</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int_</span><span class="p">([</span><span class="n">right_line_pts</span><span class="p">]),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">addWeighted</span><span class="p">(</span><span class="n">out_img</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">window_img</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">left_fitx</span><span class="p">,</span> <span class="n">ploty</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">right_fitx</span><span class="p">,</span> <span class="n">ploty</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1280</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">720</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Carlton Joseph.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

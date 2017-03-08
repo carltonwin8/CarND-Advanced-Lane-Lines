@@ -63,6 +63,7 @@
     <span class="n">cal_test_img</span> <span class="o">=</span> <span class="s1">&#39;../camera_cal/calibration1.jpg&#39;</span>
     <span class="n">cal_test_img_undist</span> <span class="o">=</span> <span class="s1">&#39;../output_images/calibration1_undist.jpg&#39;</span>
     <span class="n">test_img1</span> <span class="o">=</span> <span class="s1">&#39;../test_images/straight_lines1.jpg&#39;</span>
+    <span class="n">test_img2</span> <span class="o">=</span> <span class="s1">&#39;../test_images/straight_lines2.jpg&#39;</span>
     <span class="n">test_img1_undist</span> <span class="o">=</span> <span class="s1">&#39;../output_images/straight_lines1_undist.jpg&#39;</span>
     <span class="n">test_img1_sobel_x</span> <span class="o">=</span> <span class="s1">&#39;../output_images/straight_lines1_sobel_x.jpg&#39;</span>
     <span class="n">test_img1_hls_s</span> <span class="o">=</span> <span class="s1">&#39;../output_images/straight_lines1_hls_s.jpg&#39;</span>
@@ -70,6 +71,14 @@
     <span class="n">test_img1_sxs_c</span> <span class="o">=</span> <span class="s1">&#39;../output_images/straight_lines1_sxs_c.jpg&#39;</span>
     <span class="n">test_img1_trans</span> <span class="o">=</span> <span class="s1">&#39;../output_images/straight_lines1_trans.jpg&#39;</span>
     <span class="n">test_img1_sxs_trans</span> <span class="o">=</span> <span class="s1">&#39;../output_images/straight_lines1_sxs_trans.jpg&#39;</span>
+    <span class="n">test_img1_sxs_trans_nl</span> <span class="o">=</span> <span class="s1">&#39;../output_images/straight_lines1_sxs_trans_nl.jpg&#39;</span>
+    <span class="n">test1</span> <span class="o">=</span> <span class="s1">&#39;../test_images/test1.jpg&#39;</span>
+    <span class="n">test2</span> <span class="o">=</span> <span class="s1">&#39;../test_images/test2.jpg&#39;</span>
+    <span class="n">test3</span> <span class="o">=</span> <span class="s1">&#39;../test_images/test3.jpg&#39;</span>
+    <span class="n">test4</span> <span class="o">=</span> <span class="s1">&#39;../test_images/test4.jpg&#39;</span>
+    <span class="n">test5</span> <span class="o">=</span> <span class="s1">&#39;../test_images/test5.jpg&#39;</span>
+    <span class="n">test6</span> <span class="o">=</span> <span class="s1">&#39;../test_images/test6.jpg&#39;</span>
+    <span class="n">testset</span> <span class="o">=</span> <span class="p">[</span><span class="n">test_img1</span><span class="p">,</span> <span class="n">test_img2</span><span class="p">,</span> <span class="n">test1</span><span class="p">,</span> <span class="n">test2</span><span class="p">,</span> <span class="n">test3</span><span class="p">,</span> <span class="n">test4</span><span class="p">,</span> <span class="n">test5</span><span class="p">,</span> <span class="n">test6</span><span class="p">]</span>
     
 <div class="viewcode-block" id="fn.temp"><a class="viewcode-back" href="../rst/utils.html#utils.fn.temp">[docs]</a>    <span class="k">def</span> <span class="nf">temp</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">post</span><span class="p">):</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -120,6 +129,9 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dstack</span><span class="p">((</span><span class="n">img1</span><span class="o">*</span><span class="mi">255</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">img1</span><span class="p">),</span> <span class="n">img2</span><span class="o">*</span><span class="mi">255</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="perspective_transform"><a class="viewcode-back" href="../rst/utils.html#utils.perspective_transform">[docs]</a><span class="k">class</span> <span class="nc">perspective_transform</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class to help test out various transform values and determine which is best</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tl</span><span class="o">=-</span><span class="mi">55</span><span class="p">,</span> <span class="n">bl</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">br</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">tr</span><span class="o">=</span><span class="mi">55</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1280</span><span class="p">,</span> <span class="mi">720</span><span class="p">)):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tl</span> <span class="o">=</span> <span class="n">tl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bl</span> <span class="o">=</span> <span class="n">bl</span>
@@ -146,6 +158,22 @@
     
 <div class="viewcode-block" id="perspective_transform.file_post"><a class="viewcode-back" href="../rst/utils.html#utils.perspective_transform.file_post">[docs]</a>    <span class="k">def</span> <span class="nf">file_post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tl</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tr</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bl</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">br</span><span class="p">)</span></div></div>
+    
+<div class="viewcode-block" id="draw_window_centroids"><a class="viewcode-back" href="../rst/utils.html#utils.draw_window_centroids">[docs]</a><span class="k">def</span> <span class="nf">draw_window_centroids</span><span class="p">(</span><span class="n">warped</span><span class="p">,</span> <span class="n">l_points</span><span class="p">,</span> <span class="n">r_points</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Draw centroids on an image</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Draw the results</span>
+    <span class="c1"># add both left and right window pixels together</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">r_points</span><span class="o">+</span><span class="n">l_points</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> 
+    <span class="n">zero_channel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">template</span><span class="p">)</span> <span class="c1"># create a zero color channle </span>
+    <span class="c1"># make window pixels green</span>
+    <span class="n">template</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">merge</span><span class="p">((</span><span class="n">zero_channel</span><span class="p">,</span><span class="n">template</span><span class="p">,</span><span class="n">zero_channel</span><span class="p">)),</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> 
+    <span class="c1"># making the original road pixels 3 color channels</span>
+    <span class="n">warpage</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">merge</span><span class="p">((</span><span class="n">warped</span><span class="p">,</span><span class="n">warped</span><span class="p">,</span><span class="n">warped</span><span class="p">)),</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="c1"># overlay the orignal road image with window results</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">addWeighted</span><span class="p">(</span><span class="n">warpage</span><span class="p">,</span> <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">template</span><span class="p">,</span> <span class="n">weights</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output</span></div>
 </pre></div>
 
       </div>

@@ -104,6 +104,12 @@
 </table>
 </dd></dl>
 
+<dl class="function">
+<dt id="utils.draw_window_centroids">
+<code class="descclassname">utils.</code><code class="descname">draw_window_centroids</code><span class="sig-paren">(</span><em>warped</em>, <em>l_points</em>, <em>r_points</em>, <em>weights=(0.5</em>, <em>0.5)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#draw_window_centroids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.draw_window_centroids" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw centroids on an image</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="utils.fn">
 <em class="property">class </em><code class="descclassname">utils.</code><code class="descname">fn</code><a class="reference internal" href="../_modules/utils.html#fn"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.fn" title="Permalink to this definition">¶</a></dt>
@@ -132,6 +138,36 @@
 <dl class="method">
 <dt id="utils.fn.temp">
 <code class="descname">temp</code><span class="sig-paren">(</span><em>name</em>, <em>post</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#fn.temp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.fn.temp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test1">
+<code class="descname">test1</code><em class="property"> = '../test_images/test1.jpg'</em><a class="headerlink" href="#utils.fn.test1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test2">
+<code class="descname">test2</code><em class="property"> = '../test_images/test2.jpg'</em><a class="headerlink" href="#utils.fn.test2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test3">
+<code class="descname">test3</code><em class="property"> = '../test_images/test3.jpg'</em><a class="headerlink" href="#utils.fn.test3" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test4">
+<code class="descname">test4</code><em class="property"> = '../test_images/test4.jpg'</em><a class="headerlink" href="#utils.fn.test4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test5">
+<code class="descname">test5</code><em class="property"> = '../test_images/test5.jpg'</em><a class="headerlink" href="#utils.fn.test5" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.test6">
+<code class="descname">test6</code><em class="property"> = '../test_images/test6.jpg'</em><a class="headerlink" href="#utils.fn.test6" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -165,6 +201,11 @@
 <dd></dd></dl>
 
 <dl class="attribute">
+<dt id="utils.fn.test_img1_sxs_trans_nl">
+<code class="descname">test_img1_sxs_trans_nl</code><em class="property"> = '../output_images/straight_lines1_sxs_trans_nl.jpg'</em><a class="headerlink" href="#utils.fn.test_img1_sxs_trans_nl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="utils.fn.test_img1_trans">
 <code class="descname">test_img1_trans</code><em class="property"> = '../output_images/straight_lines1_trans.jpg'</em><a class="headerlink" href="#utils.fn.test_img1_trans" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -174,12 +215,23 @@
 <code class="descname">test_img1_undist</code><em class="property"> = '../output_images/straight_lines1_undist.jpg'</em><a class="headerlink" href="#utils.fn.test_img1_undist" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="attribute">
+<dt id="utils.fn.test_img2">
+<code class="descname">test_img2</code><em class="property"> = '../test_images/straight_lines2.jpg'</em><a class="headerlink" href="#utils.fn.test_img2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="utils.fn.testset">
+<code class="descname">testset</code><em class="property"> = ['../test_images/straight_lines1.jpg', '../test_images/straight_lines2.jpg', '../test_images/test1.jpg', '../test_images/test2.jpg', '../test_images/test3.jpg', '../test_images/test4.jpg', '../test_images/test5.jpg', '../test_images/test6.jpg']</em><a class="headerlink" href="#utils.fn.testset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="utils.perspective_transform">
 <em class="property">class </em><code class="descclassname">utils.</code><code class="descname">perspective_transform</code><span class="sig-paren">(</span><em>tl=-55</em>, <em>bl=-10</em>, <em>br=60</em>, <em>tr=55</em>, <em>size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#perspective_transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.perspective_transform" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Class to help test out various transform values and determine which is best</p>
 <dl class="method">
 <dt id="utils.perspective_transform.file_post">
 <code class="descname">file_post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/utils.html#perspective_transform.file_post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.perspective_transform.file_post" title="Permalink to this definition">¶</a></dt>
