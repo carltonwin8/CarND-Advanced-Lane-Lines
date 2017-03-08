@@ -1,7 +1,11 @@
 # Advanced Lane Finding Projects
 
-This README contains notes for the project hosted at the repository
-[here](https://github.com/carltonwin8/CarND-Advanced-Lane-Lines).
+The notes for this project are best viewed on line at the
+[repo](https://github.com/carltonwin8/CarND-Advanced-Lane-Lines)
+or at the
+[documentation](https://github.com/carltonwin8/CarND-Advanced-Lane-Lines).
+because the source code is linked to by this document and the more
+detailed documentation/comments/notes can be seen there.
 This project is my completion of the Udacity project template provided at
 [this](https://github.com/udacity/CarND-Advanced-Lane-Lines)
 repository.
