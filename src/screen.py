@@ -54,27 +54,11 @@ def transform(execute):
         imshow(pt.transform_l(img))
         print(pt.src)
         print(pt.dst)
-
-def identify_line1(l, img, execute=True):
-    if execute:
-        imgr = np.zeros_like(img)
-        imgr[(l == 255) & (img == 255)] = 255
-        imshow(imgr, cmap='gray')
      
 def identify_line(execute):
     if execute:
-        img = cv2.imread(utl.fn.test_img1_sxs_trans_nl)
-        channel = img[:, :, 0]
-        centroids = ll.find_window_centroids(channel)
-        l, r = ll.lane_mask(channel, centroids)
-        imshow(l, cmap='gray')
-        imshow(r, cmap='gray')
-        identify_line1(l, channel)
-        identify_line1(r, channel)
-        l_nz = l.nonzero()
-        left_fit = np.polyfit(l_nz[0], l_nz[1], 2)
-        ploty = np.linspace(0, img.shape[0]-1, img.shape[0])
-        left_fitx = left_fit[0]*ploty**2 + left_fit[1]*ploty + left_fit[2]
+        pass
+
 
 
 def lane_line(execute):
@@ -82,9 +66,13 @@ def lane_line(execute):
         mtx, dist = utl.distort_load(utl.fn.pickle_file)
         src, dst = ll.perspective_transform_values()
         M = ll.perspective_transform_map(src, dst)
-        fl = ll.find_land_lines(mtx, dist, src, dst, M)
-        for img in utl.fn.testset:
-            imshow(fl.fll(cv2.imread(img)), cmap='gray')
+        Minv = ll.perspective_transform_map(dst,src)
+        fl = ll.find_lane_lines(mtx, dist, src, dst, M, Minv)
+        for imgfn in utl.fn.testset2:
+            img = cv2.imread(imgfn)
+            print(imgfn)
+            imshow(img)            
+            imshow(fl.fll(img))
         
 def main():
     """

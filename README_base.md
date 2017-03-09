@@ -154,3 +154,29 @@ Here's a [link to my video result](./project_video.mp4)
 Here I'll talk about the approach I took, what techniques I used, what worked
 and why, where the pipeline might fail and how I might improve it if I were
 going to pursue this project further.  
+
+#### Issues
+
+  - straight_lines1 show that the provided transformation coefficients did not produce
+    a straight line. To produce a straigh line the coefficients were changed from
+    (), (), (), () to (), (), (), ().
+  - test5 image had too much of noise from the shadows and the HLS minimum threshold was
+    tuned from the provided 150 up to 180.
+  - test4 image the curve in the road was too large and the sliding windows was not
+    large enough. The value of 100 was increased so that I correctly predicted the
+    road curve.
+
+#### Future Enhancements
+
+  - Change hard coded values noted below to setup parameters so code can be tuned and generalized.
+
+    - Allow for different image sized.
+    - Allow for tuning of threshold values
+    - Allow for tuning of the polynomial fitting procedure so that you can change the windows size,
+      number of windows, margins and the minimum number of pixels required to determine the window position.
+
+
+# Notes To Be Deleted
+
+test4.jpg
+[  7.54443186e-05  -1.07021929e-01   4.04300416e+02] [  4.84268424e-04  -4.53135465e-01   1.12382462e+03]

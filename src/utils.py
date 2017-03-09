@@ -33,6 +33,8 @@ class fn():
     test5 = '../test_images/test5.jpg'
     test6 = '../test_images/test6.jpg'
     testset = [test_img1, test_img2, test1, test2, test3, test4, test5, test6]
+    testset2 = [test4, test5]
+    testset3 = [test4]
     
     def temp(name, post):
         base = name.split('/')[-1]

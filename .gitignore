@@ -4,4 +4,3 @@ _build/
 src/__pycache__/
 README.html
 tmp/
-src/lecture18_v33_findLines.py
