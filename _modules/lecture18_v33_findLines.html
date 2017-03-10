@@ -51,16 +51,33 @@
 <span class="kn">import</span> <span class="nn">cv2</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">utils</span> <span class="k">as</span> <span class="nn">utl</span>
+<span class="kn">import</span> <span class="nn">display</span>
+<span class="kn">import</span> <span class="nn">lane_line</span> <span class="k">as</span> <span class="nn">ll</span>
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../rst/lecture18_v33_findLines.html#lecture18_v33_findLines.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">utl</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="n">test_img1</span><span class="p">)</span>
-    <span class="n">binary_warped</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">utl</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="n">test_img1_sxs_trans_nl</span><span class="p">)[:,:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">255</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span> <span class="o">=</span> <span class="n">utl</span><span class="o">.</span><span class="n">distort_load</span><span class="p">(</span><span class="n">utl</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="n">pickle_file</span><span class="p">)</span>
+    <span class="n">src</span><span class="p">,</span> <span class="n">dst</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">perspective_transform_values</span><span class="p">()</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">perspective_transform_map</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">)</span>
+    <span class="n">Minv</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">perspective_transform_map</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">src</span><span class="p">)</span>
+    <span class="n">fl</span> <span class="o">=</span> <span class="n">ll</span><span class="o">.</span><span class="n">find_lane_lines</span><span class="p">(</span><span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">Minv</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">imgfn</span> <span class="ow">in</span> <span class="n">utl</span><span class="o">.</span><span class="n">fn</span><span class="o">.</span><span class="n">testset3</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">imgfn</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">imgfn</span><span class="p">)</span>
+        <span class="n">display</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+        <span class="n">binary_warped</span> <span class="o">=</span> <span class="n">fl</span><span class="o">.</span><span class="n">fll</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="c1">#      binary_warped = cv2.imread(utl.fn.test_img1_sxs_trans_nl)[:,:,0]/255</span>
+        <span class="n">sub</span><span class="p">(</span><span class="n">binary_warped</span><span class="p">)</span>
+        <span class="c1">#break</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Ended&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="sub"><a class="viewcode-back" href="../rst/lecture18_v33_findLines.html#lecture18_v33_findLines.sub">[docs]</a><span class="k">def</span> <span class="nf">sub</span><span class="p">(</span><span class="n">binary_warped</span><span class="p">,</span> <span class="n">img_size</span><span class="o">=</span><span class="p">(</span><span class="mi">720</span><span class="p">,</span><span class="mi">1280</span><span class="p">)):</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">binary_warped</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
     <span class="c1">## use to get histogram for part of the binary image</span>
-    <span class="n">histogram</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">binary_warped</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">):,:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">histogram</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">binary_warped</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">img_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">):,:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">histogram</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
@@ -90,7 +107,7 @@
     <span class="n">leftx_current</span> <span class="o">=</span> <span class="n">leftx_base</span>
     <span class="n">rightx_current</span> <span class="o">=</span> <span class="n">rightx_base</span>
     <span class="c1"># Set the width of the windows +/- margin</span>
-    <span class="n">margin</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">margin</span> <span class="o">=</span> <span class="mi">120</span>
     <span class="c1"># Set minimum number of pixels found to recenter window</span>
     <span class="n">minpix</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="c1"># Create empty lists to receive left and right lane pixel indices</span>
@@ -134,7 +151,7 @@
     <span class="c1"># Fit a second order polynomial to each</span>
     <span class="n">left_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">lefty</span><span class="p">,</span> <span class="n">leftx</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">right_fit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">righty</span><span class="p">,</span> <span class="n">rightx</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
+    <span class="nb">print</span><span class="p">(</span><span class="n">left_fit</span><span class="p">,</span> <span class="n">right_fit</span><span class="p">)</span>
 
 
     <span class="c1">## visulization of sliding windows</span>

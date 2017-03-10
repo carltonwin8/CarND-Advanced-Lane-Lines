@@ -250,6 +250,9 @@ dst <span class="pl-k">=</span> np.float32(
 </tbody>
 </table>
 
+<h2>
+<a id="user-content-identify-lane-lines" class="anchor" href="#identify-lane-lines" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Identify Lane Lines</h2>
+
 <h4>
 <a id="user-content-4-describe-how-and-identify-where-in-your-code-you-identified-lane-line-pixels-and-fit-their-positions-with-a-polynomial" class="anchor" href="#4-describe-how-and-identify-where-in-your-code-you-identified-lane-line-pixels-and-fit-their-positions-with-a-polynomial" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?</h4>
 
@@ -257,10 +260,18 @@ dst <span class="pl-k">=</span> np.float32(
 
 <p>![alt text][image5]</p>
 
+<h2>
+<a id="user-content-radius-of-curvature" class="anchor" href="#radius-of-curvature" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Radius of curvature</h2>
+
 <h4>
 <a id="user-content-5-describe-how-and-identify-where-in-your-code-you-calculated-the-radius-of-curvature-of-the-lane-and-the-position-of-the-vehicle-with-respect-to-center" class="anchor" href="#5-describe-how-and-identify-where-in-your-code-you-calculated-the-radius-of-curvature-of-the-lane-and-the-position-of-the-vehicle-with-respect-to-center" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.</h4>
 
 <p>I did this in lines # through # in my code in <code>my_other_file.py</code></p>
+
+<h2>
+<a id="user-content-lane-line-plot" class="anchor" href="#lane-line-plot" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Lane Line Plot</h2>
+
+<p>of curvature</p>
 
 <h4>
 <a id="user-content-6-provide-an-example-image-of-your-result-plotted-back-down-onto-the-road-such-that-the-lane-area-is-identified-clearly" class="anchor" href="#6-provide-an-example-image-of-your-result-plotted-back-down-onto-the-road-such-that-the-lane-area-is-identified-clearly" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.</h4>
@@ -290,6 +301,57 @@ dst <span class="pl-k">=</span> np.float32(
 <p>Here I'll talk about the approach I took, what techniques I used, what worked
 and why, where the pipeline might fail and how I might improve it if I were
 going to pursue this project further.  </p>
+
+<h4>
+<a id="user-content-issues" class="anchor" href="#issues" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Issues</h4>
+
+<ul>
+<li>straight_lines1 show that the provided transformation coefficients did not produce
+a straight line. To produce a straigh line the coefficients were changed from
+(), (), (), () to (), (), (), ().</li>
+<li>test5 image had too much of noise from the shadows and the HLS minimum threshold was
+tuned from the provided 150 up to 180.</li>
+<li>test4 image the curve in the road was too large and the sliding windows was not
+large enough. The value of 100 was increased so that I correctly predicted the
+road curve.</li>
+</ul>
+
+<h4>
+<a id="user-content-future-enhancements" class="anchor" href="#future-enhancements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Future Enhancements</h4>
+
+<ul>
+<li>
+<p>Change hard coded values noted below to setup parameters so code can be tuned and generalized.</p>
+
+<ul>
+<li>Allow for different image sized.</li>
+<li>Allow for tuning of threshold values</li>
+<li>Allow for tuning of the polynomial fitting procedure so that you can change the windows size,
+number of windows, margins and the minimum number of pixels required to determine the window position.</li>
+</ul>
+</li>
+</ul>
+
+<h1>
+<a id="user-content-notes-to-be-deleted" class="anchor" href="#notes-to-be-deleted" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Notes To Be Deleted</h1>
+
+<h2>
+<a id="user-content-to-do" class="anchor" href="#to-do" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TO DO</h2>
+
+<p>In no particular order:</p>
+
+<ul>
+<li>implement convolution for finding lines</li>
+<li>compare convolution to sliding windows line finding by writing analysis plotting code</li>
+<li>write a loop to test different threshold values for the difficult train part and
+collect the missed frames and chose the best setting</li>
+<li>write routines to save images for bad line identification and then manually
+see how I can improve it</li>
+<li>figure out why the radius of curvature go nuts in some part of the graph</li>
+<li>implement the smoothing algorithm and compare missed images look</li>
+<li>implement not blindly searching for lane lines but using the previous lane results to speed up
+the search and collect statistics on this.</li>
+</ul>
 
               </article>
             </div>

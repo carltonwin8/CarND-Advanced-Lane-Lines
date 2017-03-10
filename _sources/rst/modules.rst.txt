@@ -4,8 +4,10 @@ src
 .. toctree::
    :maxdepth: 4
 
+   display
    files
    lane_line
    lecture18_v33_findLines
+   process_video
    screen
    utils

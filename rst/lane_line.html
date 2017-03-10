@@ -51,6 +51,23 @@
         
   <div class="section" id="module-lane_line">
 <span id="lane-line-module"></span><h1>lane_line module<a class="headerlink" href="#module-lane_line" title="Permalink to this headline">¶</a></h1>
+<p>&#64;author: Carlton Joseph</p>
+<dl class="class">
+<dt id="lane_line.Line">
+<em class="property">class </em><code class="descclassname">lane_line.</code><code class="descname">Line</code><a class="reference internal" href="../_modules/lane_line.html#Line"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.Line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="lane_line.Line.check_resutls">
+<code class="descname">check_resutls</code><span class="sig-paren">(</span><em>fit</em>, <em>radius</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#Line.check_resutls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.Line.check_resutls" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="lane_line.Line.history">
+<code class="descname">history</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#Line.history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.Line.history" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 <dl class="function">
 <dt id="lane_line.calibrate">
 <code class="descclassname">lane_line.</code><code class="descname">calibrate</code><span class="sig-paren">(</span><em>img_glob</em>, <em>img_size=(1280</em>, <em>720)</em>, <em>rows=6</em>, <em>cols=9</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#calibrate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.calibrate" title="Permalink to this definition">¶</a></dt>
@@ -77,10 +94,22 @@
 <dl class="function">
 <dt id="lane_line.combine_binary">
 <code class="descclassname">lane_line.</code><code class="descname">combine_binary</code><span class="sig-paren">(</span><em>img1</em>, <em>img2</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#combine_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.combine_binary" title="Permalink to this definition">¶</a></dt>
-<dd><p>Combines two binary images via an OR operator
-:param img1: image
-:param img2: image
-:return: binary image</p>
+<dd><p>Combines two binary images via an OR operator</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>img1</strong> &#8211; image</li>
+<li><strong>img2</strong> &#8211; image</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">binary image</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -91,16 +120,41 @@
 <dl class="function">
 <dt id="lane_line.draw_lines">
 <code class="descclassname">lane_line.</code><code class="descname">draw_lines</code><span class="sig-paren">(</span><em>img, lines, color=[255, 0, 0], thickness=10, weights=(0.5, 0.5)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#draw_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.draw_lines" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Draw lines on an image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>img</strong> (<em>array</em>) &#8211; RGB image</li>
+<li><strong>lines</strong> (<em>array</em>) &#8211; Containing the points of the line</li>
+<li><strong>thickness</strong> (<em>int</em>) &#8211; The thickness fo the line</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">RGB image</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">img</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="class">
-<dt id="lane_line.find_land_lines">
-<em class="property">class </em><code class="descclassname">lane_line.</code><code class="descname">find_land_lines</code><span class="sig-paren">(</span><em>mtx</em>, <em>dist</em>, <em>src</em>, <em>dst</em>, <em>M</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_land_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_land_lines" title="Permalink to this definition">¶</a></dt>
+<dt id="lane_line.find_lane_lines">
+<em class="property">class </em><code class="descclassname">lane_line.</code><code class="descname">find_lane_lines</code><span class="sig-paren">(</span><em>mtx</em>, <em>dist</em>, <em>src</em>, <em>dst</em>, <em>M</em>, <em>Minv</em>, <em>retpt=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_lane_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_lane_lines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>find image lane line for given camera calibartion and perspective transform values</p>
 <dl class="method">
-<dt id="lane_line.find_land_lines.fll">
-<code class="descname">fll</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_land_lines.fll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_land_lines.fll" title="Permalink to this definition">¶</a></dt>
+<dt id="lane_line.find_lane_lines.fll">
+<code class="descname">fll</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_lane_lines.fll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_lane_lines.fll" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="lane_line.find_lane_lines.history">
+<code class="descname">history</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_lane_lines.history"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_lane_lines.history" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -112,8 +166,13 @@
 </dd></dl>
 
 <dl class="function">
+<dt id="lane_line.fit_poly">
+<code class="descclassname">lane_line.</code><code class="descname">fit_poly</code><span class="sig-paren">(</span><em>binary_warped</em>, <em>img_size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#fit_poly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.fit_poly" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="lane_line.hls_s_binary">
-<code class="descclassname">lane_line.</code><code class="descname">hls_s_binary</code><span class="sig-paren">(</span><em>img</em>, <em>s_thresh_min=150</em>, <em>s_thresh_max=255</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#hls_s_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.hls_s_binary" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">lane_line.</code><code class="descname">hls_s_binary</code><span class="sig-paren">(</span><em>img</em>, <em>s_thresh_min=180</em>, <em>s_thresh_max=255</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#hls_s_binary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.hls_s_binary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Identifies edeges in an image using the HLS S dimension and the thresholds provided</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -154,6 +213,11 @@
 <code class="descclassname">lane_line.</code><code class="descname">perspective_transform_values</code><span class="sig-paren">(</span><em>tl=-60</em>, <em>tr=60</em>, <em>bl=-10</em>, <em>br=40</em>, <em>img_size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#perspective_transform_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.perspective_transform_values" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates perspective transform values</p>
 </dd></dl>
+
+<dl class="function">
+<dt id="lane_line.poly2image">
+<code class="descclassname">lane_line.</code><code class="descname">poly2image</code><span class="sig-paren">(</span><em>img</em>, <em>left_fit</em>, <em>right_fit</em>, <em>Minv</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#poly2image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.poly2image" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="function">
 <dt id="lane_line.sobel_x_binary">

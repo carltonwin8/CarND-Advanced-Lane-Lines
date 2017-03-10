@@ -53,6 +53,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">cv2</span>
 <span class="kn">import</span> <span class="nn">lane_line</span> <span class="k">as</span> <span class="nn">ll</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <div class="viewcode-block" id="fn"><a class="viewcode-back" href="../rst/utils.html#utils.fn">[docs]</a><span class="k">class</span> <span class="nc">fn</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -79,6 +80,8 @@
     <span class="n">test5</span> <span class="o">=</span> <span class="s1">&#39;../test_images/test5.jpg&#39;</span>
     <span class="n">test6</span> <span class="o">=</span> <span class="s1">&#39;../test_images/test6.jpg&#39;</span>
     <span class="n">testset</span> <span class="o">=</span> <span class="p">[</span><span class="n">test_img1</span><span class="p">,</span> <span class="n">test_img2</span><span class="p">,</span> <span class="n">test1</span><span class="p">,</span> <span class="n">test2</span><span class="p">,</span> <span class="n">test3</span><span class="p">,</span> <span class="n">test4</span><span class="p">,</span> <span class="n">test5</span><span class="p">,</span> <span class="n">test6</span><span class="p">]</span>
+    <span class="n">testset2</span> <span class="o">=</span> <span class="p">[</span><span class="n">test4</span><span class="p">,</span> <span class="n">test5</span><span class="p">]</span>
+    <span class="n">testset3</span> <span class="o">=</span> <span class="p">[</span><span class="n">test4</span><span class="p">]</span>
     
 <div class="viewcode-block" id="fn.temp"><a class="viewcode-back" href="../rst/utils.html#utils.fn.temp">[docs]</a>    <span class="k">def</span> <span class="nf">temp</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">post</span><span class="p">):</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -89,10 +92,12 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Saves a distortion matrix to a file</span>
 <span class="sd">    </span>
-<span class="sd">    :param file: Filename to save undistorted parameters</span>
-<span class="sd">    :param mtx: Camera calibartion mtx value</span>
-<span class="sd">    :param dist: Camera calibartion dist value</span>
-<span class="sd">    :return: None</span>
+<span class="sd">    Args:</span>
+<span class="sd">        file (string): filename</span>
+<span class="sd">        mtx: Camera calibartion mtx value</span>
+<span class="sd">        dist: Camera calibartion dist value</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dist_pickle</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;mtx&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mtx</span>
