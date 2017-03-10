@@ -225,7 +225,21 @@ def fit_poly(binary_warped, img_size=(1280, 720)):
     # Fit a second order polynomial to each
     left_fit = np.polyfit(lefty, leftx, 2)
     right_fit = np.polyfit(righty, rightx, 2)
-    return left_fit, right_fit
+    
+    # Define conversions in x and y from pixels space to meters
+    ym_per_pix = 30/720 # meters per pixel in y dimension
+    xm_per_pix = 3.7/700 # meters per pixel in x dimension
+    
+    # Fit new polynomials to x,y in world space
+    ly_eval = np.max(lefty)
+    ry_eval = np.max(righty)
+    left_fit_cr = np.polyfit(lefty*ym_per_pix, leftx*xm_per_pix, 2)
+    right_fit_cr = np.polyfit(righty*ym_per_pix, rightx*xm_per_pix, 2)
+    # Calculate the new radii of curvature
+    left_curverad = ((1 + (2*left_fit_cr[0]*ly_eval*ym_per_pix + left_fit_cr[1])**2)**1.5) / np.absolute(2*left_fit_cr[0])
+    right_curverad = ((1 + (2*right_fit_cr[0]*ry_eval*ym_per_pix + right_fit_cr[1])**2)**1.5) / np.absolute(2*right_fit_cr[0])
+    
+    return left_fit, right_fit, left_curverad, right_curverad
 
 def poly2image(img, left_fit, right_fit, Minv):
     # Generate x and y values for plotting
@@ -321,7 +335,39 @@ def lane_mask(warped, window_centroids, window_width=50, window_height=80):
         r_points[(r_points == 255) | ((r_mask == 1) ) ] = 255
 
     return l_points, r_points
+
+class Line():
+    def __init__(self):
+        # was the line detected in the last iteration?
+        self.detected = False  
+        # x values of the last n fits of the line
+        self.recent_xfitted = np.array([]) 
+        self.recent_rc = np.array([])
+        #average x values of the fitted line over the last n iterations
+        self.bestx = None     
+        #polynomial coefficients averaged over the last n iterations
+        self.best_fit = None  
+        #polynomial coefficients for the most recent fit
+        self.current_fit = [np.array([False])]  
+        #radius of curvature of the line in some units
+        self.radius_of_curvature = None 
+        #distance in meters of vehicle center from the line
+        self.line_base_pos = None 
+        #difference in fit coefficients between last and new fits
+        self.diffs = np.array([0,0,0], dtype='float') 
+        #x values for detected line pixels
+        self.allx = None  
+        #y values for detected line pixels
+        self.ally = None
     
+    def check_resutls(self, fit, radius):
+        self.recent_xfitted = np.append(self.recent_xfitted,fit)
+        self.recent_rc = np.append(self.recent_rc,radius)
+        return fit, radius
+        
+    def history(self):
+        return self.recent_xfitted, self.recent_rc
+
 class find_lane_lines():
     """
     find image lane line for given camera calibartion and perspective transform values
@@ -334,6 +380,8 @@ class find_lane_lines():
         self.M = M
         self.Minv = Minv
         self.retpt = retpt
+        self.check_l = Line()
+        self.check_r = Line()
         
     def fll(self, img):
         undist = undistort(img, self.mtx, self.dist)
@@ -341,7 +389,14 @@ class find_lane_lines():
         pt = perspective_transform(thresh, self.M)
         if self.retpt:
             return pt
-        lf, rf = fit_poly(pt)
+        lf_f, rf_f, lc_f, rc_f = fit_poly(pt)
+        lf, lc = self.check_l.check_resutls(lf_f, lc_f)
+        rf, rc = self.check_r.check_resutls(rf_f, rc_f)
         ll = poly2image(undist, lf, rf, self.Minv)
-        return ll
+        text = "Left/Right Curvatures = " + str(int(lc)) + "/" + str(int(rc)) + " meters"
+        out = cv2.putText(ll, text, (100,50), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 2)
+        return out
+    
+    def history(self):
+        return  self.check_l.history(), self.check_r.history()
     

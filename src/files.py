@@ -6,7 +6,7 @@
 import cv2
 import lane_line as ll
 import utils as utl
-
+import display
 
 def undistort(execute):
     if execute:
@@ -54,7 +54,7 @@ def identify_line(execute):
         print(centroids)
         output = ll.draw_window_centroids(channel, centroids)
         print(output.shape)
-        imshow(output)
+        display.imshow(output)
 
 def main():
     """

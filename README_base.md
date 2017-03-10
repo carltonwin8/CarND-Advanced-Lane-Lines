@@ -121,17 +121,23 @@ The transform was tested on the images noted below to verify that the lines appe
 |:---:|:---:|:---:|
 | ![](test_images/straight_lines1.jpg) | ![](output_images/straight_lines1_trans.jpg) | ![](output_images/straight_lines1_sxs_trans.jpg) |
 
-####4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+## Identify Lane Lines
+#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
 Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
 ![alt text][image5]
 
-####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+## Radius of curvature
+
+#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
 
 I did this in lines # through # in my code in `my_other_file.py`
 
-####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+## Lane Line Plot
+
+ of curvature
+#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
@@ -139,17 +145,17 @@ I implemented this step in lines # through # in my code in `yet_another_file.py`
 
 ---
 
-###Pipeline (video)
+### Pipeline (video)
 
-####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
 
 Here's a [link to my video result](./project_video.mp4)
 
 ---
 
-###Discussion
+### Discussion
 
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
 
 Here I'll talk about the approach I took, what techniques I used, what worked
 and why, where the pipeline might fail and how I might improve it if I were
@@ -178,5 +184,18 @@ going to pursue this project further.
 
 # Notes To Be Deleted
 
-test4.jpg
-[  7.54443186e-05  -1.07021929e-01   4.04300416e+02] [  4.84268424e-04  -4.53135465e-01   1.12382462e+03]
+
+## TO DO
+
+In no particular order:
+
+  - implement convolution for finding lines
+  - compare convolution to sliding windows line finding by writing analysis plotting code
+  - write a loop to test different threshold values for the difficult train part and
+    collect the missed frames and chose the best setting
+  - write routines to save images for bad line identification and then manually
+    see how I can improve it
+  - figure out why the radius of curvature go nuts in some part of the graph
+  - implement the smoothing algorithm and compare missed images look
+  - implement not blindly searching for lane lines but using the previous lane results to speed up
+    the search and collect statistics on this.
