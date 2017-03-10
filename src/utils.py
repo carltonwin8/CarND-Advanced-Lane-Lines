@@ -7,6 +7,7 @@ import pickle
 import numpy as np
 import cv2
 import lane_line as ll
+import matplotlib.pyplot as plt
 
 class fn():
     """
@@ -45,10 +46,12 @@ def distort_save(file, mtx, dist):
     """
     Saves a distortion matrix to a file
     
-    :param file: Filename to save undistorted parameters
-    :param mtx: Camera calibartion mtx value
-    :param dist: Camera calibartion dist value
-    :return: None
+    Args:
+        file (string): filename
+        mtx: Camera calibartion mtx value
+        dist: Camera calibartion dist value
+    Returns:
+        None
     """
     dist_pickle = {}
     dist_pickle["mtx"] = mtx

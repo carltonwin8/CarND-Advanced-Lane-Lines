@@ -4,26 +4,15 @@
 @author: Carlton Joseph
 """
 import cv2
-import numpy as np
-import matplotlib.pyplot as plt
 import lane_line as ll
 import utils as utl
-
-
-def imshow(img, cmap=None, show=True):
-    if show:
-        if cmap == None:
-            plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-        else:
-            plt.imshow(img, cmap="gray")
-        plt.show()
+import display
 
 def undistort1(fn, mtx, dist, execute):
     if execute:
         img_dist = cv2.imread(fn)
         img_undist = ll.undistort(img_dist, mtx, dist)
-        imshow(img_dist)
-        imshow(img_undist)
+        display.imshow([img_dist, img_undist])
     
 
 def undistort(execute):
@@ -36,12 +25,13 @@ def edge_detect(execute):
     if execute:
         img = cv2.imread(utl.fn.test_img1_undist)
         img_sx_b = ll.sobel_x_binary(img)
-        imshow(img_sx_b, cmap='gray', show=True)
+        display.imshow(img_sx_b, cmap='gray', show=True)
         img_hls_sb = ll.hls_s_binary(img)
-        imshow(img_hls_sb, cmap='gray', show=True)
+        display.imshow(img_hls_sb, cmap='gray', show=True)
         img_sxb = ll.combine_binary(img_sx_b, img_hls_sb)
-        imshow(img_sxb, cmap='gray', show=True)
-        imshow(utl.bin22color(img_sx_b, img_hls_sb), show=True)
+        display.imshow(img_sxb, cmap='gray', show=True)
+        display.imshow([[img_sx_b,'gray'],])
+        display.imshow(utl.bin22color(img_sx_b, img_hls_sb), show=True)
 
 def transform(execute):
     if execute:
@@ -51,7 +41,7 @@ def transform(execute):
         pt.tl = -60
         pt.tr = 60
         pt.br = 40
-        imshow(pt.transform_l(img))
+        display.imshow(pt.transform_l(img))
         print(pt.src)
         print(pt.dst)
      
@@ -68,11 +58,11 @@ def lane_line(execute):
         M = ll.perspective_transform_map(src, dst)
         Minv = ll.perspective_transform_map(dst,src)
         fl = ll.find_lane_lines(mtx, dist, src, dst, M, Minv)
-        for imgfn in utl.fn.testset2:
+        for imgfn in utl.fn.testset:
             img = cv2.imread(imgfn)
             print(imgfn)
-            imshow(img)            
-            imshow(fl.fll(img))
+            display.imshow(img)            
+            display.imshow(fl.fll(img))
         
 def main():
     """

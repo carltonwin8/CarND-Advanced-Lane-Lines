@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-.. moduleauthor:: Carlton Joseph <carlton.joseph@gmail.com>
-
+@author: Carlton Joseph
 """
 import glob
 import numpy as np
 import cv2
-import matplotlib.pyplot as plt
+import display
 
 def calibrate(img_glob, img_size=(1280, 720), rows=6, cols=9):
     """
@@ -90,6 +89,7 @@ def hls_s_binary(img, s_thresh_min=180, s_thresh_max=255):
 def combine_binary(img1, img2):
     """
     Combines two binary images via an OR operator
+    
     :param img1: image
     :param img2: image
     :return: binary image
@@ -105,6 +105,7 @@ def threshold(img):
     sxb = sobel_x_binary(img)
     hsb = hls_s_binary(img)
     cmb = combine_binary(sxb,hsb)
+    display.imshow([sxb,hsb,cmb], cmap='gray', show=False)
     return cmb
 
 def perspective_transform_values(tl=-60, tr=60, bl=-10, br=40, img_size=(1280, 720)):
@@ -143,6 +144,17 @@ def create_lines(points):
     return lines
     
 def draw_lines(img, lines, color=[255, 0, 0], thickness=10, weights=(0.5, 0.5)):
+    """
+    Draw lines on an image
+    
+    Args:
+        img (array): RGB image
+        lines (array): Containing the points of the line
+        thickness (int): The thickness fo the line
+    
+    Returns:
+        img: RGB image    
+    """    
     img2 = np.zeros_like(img)
     for line in lines:
         for x1,y1,x2,y2 in line:
@@ -213,7 +225,6 @@ def fit_poly(binary_warped, img_size=(1280, 720)):
     # Fit a second order polynomial to each
     left_fit = np.polyfit(lefty, leftx, 2)
     right_fit = np.polyfit(righty, rightx, 2)
-    print(left_fit, right_fit)
     return left_fit, right_fit
 
 def poly2image(img, left_fit, right_fit, Minv):
@@ -224,8 +235,8 @@ def poly2image(img, left_fit, right_fit, Minv):
     
     # Create an image to draw the lines on
     warp_zero = np.zeros_like(img).astype(np.uint8)
-    color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
-    
+    #color_warp = np.dstack((warp_zero, warp_zero, warp_zero))
+    color_warp = warp_zero
     # Recast the x and y points into usable format for cv2.fillPoly()
     pts_left = np.array([np.transpose(np.vstack([left_fitx, ploty]))])
     pts_right = np.array([np.flipud(np.transpose(np.vstack([right_fitx, ploty])))])
@@ -331,7 +342,6 @@ class find_lane_lines():
         if self.retpt:
             return pt
         lf, rf = fit_poly(pt)
-        print(lf, rf)
         ll = poly2image(undist, lf, rf, self.Minv)
         return ll
     

@@ -5,6 +5,7 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 import utils as utl
+import display
 import lane_line as ll
 
 def main():
@@ -17,21 +18,20 @@ def main():
     for imgfn in utl.fn.testset3:
         print(imgfn)
         img = cv2.imread(imgfn)
+        display.imshow(img)
         binary_warped = fl.fll(img)
 #      binary_warped = cv2.imread(utl.fn.test_img1_sxs_trans_nl)[:,:,0]/255
-        sub(img, binary_warped)
+        sub(binary_warped)
         #break
 
     print('Ended')
 
-def sub(img, binary_warped):
-    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-    plt.show()
+def sub(binary_warped, img_size=(720,1280)):
     plt.imshow(binary_warped, cmap='gray')
     plt.show()
 
     ## use to get histogram for part of the binary image
-    histogram = np.sum(binary_warped[int(img.shape[0]/2):,:], axis=0)
+    histogram = np.sum(binary_warped[int(img_size[0]/2):,:], axis=0)
     plt.plot(histogram)
     plt.show()
 
