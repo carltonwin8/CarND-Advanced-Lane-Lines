@@ -8,15 +8,16 @@ import lane_line as ll
 import utils as utl
 
 def main():
-    sbl_x_thres_min = 20
-    sbl_x_thres_max = 100
-    hls_s_thres_min = 180
-    hls_s_thres_max = 255
-    
-    sbl_x_thres_mins = [20, 20, 40]
-    sbl_x_thres_maxs = [100, 80, 120]
-    hls_s_thres_mins = [180, 160, 200]
-    hls_s_thres_maxs = [255, 225, 205]
+    if True:
+        sbl_x_thres_mins = [20]
+        sbl_x_thres_maxs = [100]
+        hls_s_thres_mins = [180]
+        hls_s_thres_maxs = [255]
+    else:
+        sbl_x_thres_mins = [20, 20, 40]
+        sbl_x_thres_maxs = [100, 80, 120]
+        hls_s_thres_mins = [180, 160, 200]
+        hls_s_thres_maxs = [255, 225, 205]
     
     logbase = "../../project_video/"
     x = 4
