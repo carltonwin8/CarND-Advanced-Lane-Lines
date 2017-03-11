@@ -55,10 +55,12 @@ def sobel_x_binary(img, thresh_min=20, thresh_max=100):
     """
     Identifies edges in an image using sobel x and the thresholds provided
     
-    :param img: image
-    :param s_thresh_min: threshold min
-    :param s_thresh_max: threshold max
-    :return: binary image
+    Args:
+        img: image
+        s_thresh_min: threshold min
+        s_thresh_max: threshold max
+    
+    Returns: binary image
     """
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     sobelx = cv2.Sobel(gray, cv2.CV_64F, 1, 0)  # Take the derivative in x
@@ -98,12 +100,12 @@ def combine_binary(img1, img2):
     combined_binary[(img1 == 1) | (img2 == 1)] = 1
     return combined_binary
 
-def threshold(img):
+def threshold(img, sbl_x_thres_min, sbl_x_thres_max, hls_s_thres_min, hls_s_thres_max):
     """
     Detects the edges by ORing the sobel x and hls s channel threshold detects
     """
-    sxb = sobel_x_binary(img)
-    hsb = hls_s_binary(img)
+    sxb = sobel_x_binary(img, sbl_x_thres_min, sbl_x_thres_max)
+    hsb = hls_s_binary(img, hls_s_thres_min, hls_s_thres_max)
     cmb = combine_binary(sxb,hsb)
     display.imshow([sxb,hsb,cmb], cmap='gray', show=False)
     return cmb
@@ -361,8 +363,6 @@ class Line():
         self.ally = None
     
     def check_resutls(self, fit, radius):
-        self.recent_xfitted = np.append(self.recent_xfitted,fit)
-        self.recent_rc = np.append(self.recent_rc,radius)
         return fit, radius
         
     def history(self):
@@ -370,9 +370,12 @@ class Line():
 
 class find_lane_lines():
     """
-    find image lane line for given camera calibartion and perspective transform values
+    find image lane line for given camera calibartion and perspective transform 
+    values
     """
-    def __init__(self, mtx, dist, src, dst, M, Minv, retpt=False):
+    def __init__(self, mtx, dist, src, dst, M, Minv, 
+                 sbl_x_thres_min, sbl_x_thres_max, hls_s_thres_min, 
+                 hls_s_thres_max, log, retpt=False):
         self.mtx = mtx
         self.dist = dist
         self.src = src
@@ -382,10 +385,16 @@ class find_lane_lines():
         self.retpt = retpt
         self.check_l = Line()
         self.check_r = Line()
+        self.log = log
+        self.sbl_x_thres_min = sbl_x_thres_min
+        self.sbl_x_thres_max = sbl_x_thres_max
+        self.hls_s_thres_min = hls_s_thres_min
+        self.hls_s_thres_max = hls_s_thres_max
         
     def fll(self, img):
         undist = undistort(img, self.mtx, self.dist)
-        thresh = threshold(undist)
+        thresh = threshold(undist, self.sbl_x_thres_min, self.sbl_x_thres_max, 
+                           self.hls_s_thres_min, self.hls_s_thres_max)
         pt = perspective_transform(thresh, self.M)
         if self.retpt:
             return pt
@@ -393,8 +402,13 @@ class find_lane_lines():
         lf, lc = self.check_l.check_resutls(lf_f, lc_f)
         rf, rc = self.check_r.check_resutls(rf_f, rc_f)
         ll = poly2image(undist, lf, rf, self.Minv)
-        text = "Left/Right Curvatures = " + str(int(lc)) + "/" + str(int(rc)) + " meters"
-        out = cv2.putText(ll, text, (100,50), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (255,255,255), 2)
+        ofset = (rf[0] - lf[0])/2 - img.shape[0]/2
+        text = "Left/Right Curvatures = " + \
+            str(int(lc)) + "/" + str(int(rc)) + " meters" + \
+            ", ofset = " + str(int(ofset))
+        out = cv2.putText(ll, text, (50,50), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
+        #self.log.image(img, out)
+        #self.log.data(lf, rf, lc, rc, ofset)
         return out
     
     def history(self):

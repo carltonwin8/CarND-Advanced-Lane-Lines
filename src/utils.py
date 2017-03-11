@@ -3,6 +3,7 @@
 """
 @author: Carlton Joseph
 """
+import os
 import pickle
 import numpy as np
 import cv2
@@ -133,3 +134,75 @@ def draw_window_centroids(warped, l_points, r_points, weights=(0.5, 0.5)):
     # overlay the orignal road image with window results
     output = cv2.addWeighted(warpage, weights[0], template, weights[1], 0.0)
     return output
+
+class log():
+    def __init__(self, logdir, count=0):
+        self.logdir = logdir
+        self.count = count
+        self.lf = np.array([])
+        self.lc = np.array([])
+        self.rf = np.array([])
+        self.rc = np.array([])
+        self.ofset = np.array([])
+        self.datalog = os.path.join(logdir, 'log.p')
+
+    def logfilename(self, subdir):
+        return os.path.join(self.logdir, os.path.join(subdir,str(self.count))) + '.jpeg'
+    
+    def image(self, img_in, img_out, login=True, logout=True):
+        if login:
+            cv2.imwrite(self.logfilename('in'), img_in)
+        if login:
+            cv2.imwrite(self.logfilename('out'), img_out)
+        self.count += 1
+    
+    def data(self, lf, rf, lc, rc, ofset):
+        self.lf = np.append(self.lf,lf)
+        self.rf = np.append(self.rf,rf)
+        self.lc = np.append(self.lc,lf)
+        self.rc = np.append(self.rc,rc)
+        self.ofset = np.append(self.ofset,ofset)
+
+    def store_date(self):
+        dist_pickle = {}
+        dist_pickle["lf"] = self.lf
+        dist_pickle["rf"] = self.rf
+        dist_pickle["lc"] = self.lc
+        dist_pickle["rc"] = self.rc
+        dist_pickle["ofset"] = self.ofset
+        pickle.dump(dist_pickle, open(self.datalog, "wb"))
+        
+    def load_date(self):
+        dist_pickle = pickle.load(open(self.datalog, "rb"))
+        return dist_pickle["lf"], dist_pickle["rf"], dist_pickle["lc"], \
+            dist_pickle["rc"], dist_pickle["rc"]
+
+class analyze():
+    def __init__(self, lf, rf, lc, rc, ofset, count=0):
+        self.count = count
+        self.lf = lf
+        self.rf = rf
+        self.lc = lc
+        self.rc = rc
+        self.ofset = ofset
+        
+    def plot1(self):
+        plt.plot(self.lc)
+        plt.show()
+        plt.plot(self.rc)
+        plt.show()
+        plt.plot(self.lf[0::3])
+        plt.show()
+        plt.plot(self.lf[1::3])
+        plt.show()
+        plt.plot(self.lf[2::3])
+        plt.show()
+        plt.plot(self.lc[0::3])
+        plt.show()
+        plt.plot(self.lc[1::3])
+        plt.show()
+        plt.plot(self.lc[2::3])
+        plt.show()
+        plt.plot(self.ofset)
+        plt.show()
+        
