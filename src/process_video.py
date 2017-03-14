@@ -8,19 +8,41 @@ import lane_line as ll
 import utils as utl
 
 def main():
-    if True:
+    if False:
         sbl_x_thres_mins = [20]
         sbl_x_thres_maxs = [100]
         hls_s_thres_mins = [180]
         hls_s_thres_maxs = [255]
-    else:
-        sbl_x_thres_mins = [20, 20, 40]
+    elif False:
+        sbl_x_thres_mins = [40]
+        sbl_x_thres_maxs = [80]
+        hls_s_thres_mins = [160]
+        hls_s_thres_maxs = [205]
+    elif True:
+        sbl_x_thres_mins = [40]
         sbl_x_thres_maxs = [100, 80, 120]
         hls_s_thres_mins = [180, 160, 200]
         hls_s_thres_maxs = [255, 225, 205]
+    else:
+        sbl_x_thres_mins = [20, 40]
+        sbl_x_thres_maxs = [100, 80, 120]
+        hls_s_thres_mins = [180, 160, 200]
+        hls_s_thres_maxs = [255, 225, 205]
+
+    combinations = [
+        [40, 100, 160, 225],
+        [40, 100, 160, 255],
+        [40, 100, 180, 255],
+        [40, 120, 160, 225],
+        [40, 120, 160, 255],
+        [40, 120, 180, 255],
+        [40, 80, 160, 225],
+        [40, 80, 160, 255],
+        [40, 80, 180, 255]
+    ]
     
     logbase = "../../project_video/"
-    x = 4
+    x = 5
     if x == 1:
         video_in = "../../project_video_4s.mp4"
     elif x == 2:
@@ -60,12 +82,15 @@ def main():
         clip = clip2.fl_image(fl.fll)
         clip.write_videofile(video_out, audio=False)
     
-    for sbl_x_thres_min in sbl_x_thres_mins:
-        for sbl_x_thres_max in sbl_x_thres_maxs:
-            for hls_s_thres_min in hls_s_thres_mins:
-                for hls_s_thres_max in hls_s_thres_maxs:
-                    calc(sbl_x_thres_min, sbl_x_thres_max, 
-                         hls_s_thres_min, hls_s_thres_max)
+#    for sbl_x_thres_min in sbl_x_thres_mins:
+#        for sbl_x_thres_max in sbl_x_thres_maxs:
+#            for hls_s_thres_min in hls_s_thres_mins:
+#                for hls_s_thres_max in hls_s_thres_maxs:
+#                    calc(sbl_x_thres_min, sbl_x_thres_max, 
+#                         hls_s_thres_min, hls_s_thres_max)
+    for combo in combinations:
+        sbl_x_thres_min, sbl_x_thres_max, hls_s_thres_min, hls_s_thres_max = combo
+        calc(sbl_x_thres_min, sbl_x_thres_max, hls_s_thres_min, hls_s_thres_max)
     
     #((lfit, lradius), (rfit, rradius)) = fl.history()
     
