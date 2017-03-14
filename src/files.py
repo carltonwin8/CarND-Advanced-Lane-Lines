@@ -56,6 +56,9 @@ def identify_line(execute):
         print(output.shape)
         display.imshow(output)
 
+def process_video(execute):
+    if execute:
+
 def main():
     """
     Generate image files for the documentation
