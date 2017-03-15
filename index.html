@@ -57,32 +57,33 @@
 <a id="user-content-advanced-lane-finding-projects" class="anchor" href="#advanced-lane-finding-projects" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Advanced Lane Finding Projects</h1>
 
 <p>The notes for this project are best viewed on line at the
-<a href="https://github.com/carltonwin8/CarND-Advanced-Lane-Lines">repo</a>
-or at the
-<a href="https://github.com/carltonwin8/CarND-Advanced-Lane-Lines">documentation</a>.
-because the source code is linked to by this document and the more
-detailed documentation/comments/notes can be seen there.
-This project is my completion of the Udacity project template provided at
-<a href="https://github.com/udacity/CarND-Advanced-Lane-Lines">this</a>
-repository.</p>
+<a href="https://github.com/carltonwin8/CarND-Advanced-Lane-Lines">github repo</a>.
+It is easier to follow the link to the source code referenced in this documentation.
+This readme is my completion of the Udacity project template provided at
+<a href="https://github.com/udacity/CarND-Advanced-Lane-Lines">this repo</a>.</p>
 
-<p>The project code was developed using the
+<p>The project code is developed using the
 <a href="https://pythonhosted.org/spyder/">spyder IDE</a>
-and is maded up of the following files.</p>
+and is made up of the following files.</p>
 
 <ul>
 <li>
 <a href="_modules/lane_line.html">lane_line.py</a> -
 The main lane line identification procedures.</li>
 <li>
+<a href="_modules/process_video.html">process_video.py</a> -
+The main routine used to process various videos while varying some parameters.</li>
+<li>
 <a href="_modules/files.html">files.py</a> -
-Script used to generate the pictures for this document.</li>
+Script used to generate the images seen in this document.</li>
 <li>
 <a href="_modules/screen.html">screen.py</a> -
-Script used during the development and debug phase.</li>
+Script used during the development and debug phase for visualization.</li>
 <li>
-<a href="_modules/utils.html">utils.py</a> -
-Utility procedures that are not part of the main lane line identification procedures.</li>
+<a href="_modules/utils.html">utils.py</a>,
+<a href="_modules/config.html">config.py</a> and
+<a href="_modules/display.html">display.py</a> -
+Utility procedures and setup information.</li>
 </ul>
 
 <p>The steps of this project are the following:</p>
@@ -101,7 +102,10 @@ Utility procedures that are not part of the main lane line identification proced
 <h2>
 <a id="user-content-camera-calibration" class="anchor" href="#camera-calibration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Camera Calibration</h2>
 
-<p>I start by preparing "object points", which will be the (x, y, z) coordinates of
+<p>In the
+<a href="_modules/lane_line.html#calibrate">calibrateCamera</a>
+function
+I start by preparing "object points", which will be the (x, y, z) coordinates of
 the chessboard corners in the world. Here I am assuming the chessboard is fixed
 on the (x, y) plane at z=0, such that the object points are the same for each
 calibration image. Thus, <code>objp</code> is just a replicated array of coordinates, and
@@ -110,19 +114,10 @@ all chessboard corners in a test image. <code>imgpoints</code> will be appended 
 (x, y) pixel position of each of the corners in the image plane with each
 successful chessboard detection.</p>
 
-<p>I then used the output <code>objpoints</code> and <code>imgpoints</code> to compute the camera
-calibration and distortion coefficients using the <code>cv2.calibrateCamera()</code>
-function.
-The code for these operations is in the
-<a href="_modules/lane_line.html#calibrate">calibrateCamera</a>
-function.</p>
-
-<p>I applied this distortion correction to the test image using the
-<code>cv2.undistort()</code> function and obtained these result:
-The code for this operation is in the
+<p>I applied this distortion correction to the test image using
+<code>cv2.undistort()</code> in the
 <a href="_modules/lane_line.html#undistort">undistort</a>
-function.
-The following images shows the test results.</p>
+function and obtained the following results.</p>
 
 <table>
 <thead>
@@ -146,13 +141,13 @@ The following images shows the test results.</p>
 <h2>
 <a id="user-content-edge-detect" class="anchor" href="#edge-detect" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Edge Detect</h2>
 
-<p>I used the sobel X gradient thresholds <em>anded</em> with the HLS color space S
+<p>I used the sobel X gradient thresholds <strong>anded</strong> with the HLS color space S
 channel threshold to generate a binary image.
 The code for these operation is in the
 <a href="_modules/lane_line.html#sobel_x_binary">sobel_x_binary</a>,
 <a href="_modules/lane_line.html#hls_s_binary">hls_s_binary</a>,
-<a href="_modules/lane_line.html#combine_binary">combine_binary</a> and
-<a href="_modules/lane_line.html#edge_detect">edge_detect</a>
+<a href="_modules/lane_line.html#combine_binary">combine_binary</a>,
+<a href="_modules/lane_line.html#threshold">threshold</a> and
 functions.
 The following images shows the intermediate results from these steps.</p>
 
@@ -180,7 +175,7 @@ The following images shows the intermediate results from these steps.</p>
 
 <p>The code for this operation is in the
 <a href="_modules/lane_line.html#perspective_transform_values">perspective_transform_values</a>,
-<a href="_modules/lane_line.html#hperspective_transform_map">perspective_transform_map</a> and
+<a href="_modules/lane_line.html#perspective_transform_map">perspective_transform_map</a> and
 <a href="_modules/lane_line.html#perspective_transform">perspective_transform</a>
 functions.
 The <code>cv2.getPerspectiveTransform()</code> function creates a transform from the
@@ -251,46 +246,92 @@ dst <span class="pl-k">=</span> np.float32(
 </table>
 
 <h2>
-<a id="user-content-identify-lane-lines" class="anchor" href="#identify-lane-lines" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Identify Lane Lines</h2>
-
-<h4>
-<a id="user-content-4-describe-how-and-identify-where-in-your-code-you-identified-lane-line-pixels-and-fit-their-positions-with-a-polynomial" class="anchor" href="#4-describe-how-and-identify-where-in-your-code-you-identified-lane-line-pixels-and-fit-their-positions-with-a-polynomial" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?</h4>
+<a id="user-content-identify-lane-lines-and-polynomial-fitting" class="anchor" href="#identify-lane-lines-and-polynomial-fitting" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Identify Lane Lines And Polynomial Fitting</h2>
 
 <p>After the perspective transform the lane lines were identified by the
-<a href="_modules/line_line.html#fit_poly">fit_poly</a> and
-<a href="_modules/line_line.html#fit_poly_noslide">fit_poly_noslide</a>
+<a href="_modules/lane_line.html#fit_poly">fit_poly</a>,
+<a href="_modules/lane_line.html#get_poly">get_poly</a> and
+<a href="_modules/lane_line.html#fit_poly_noslide">fit_poly_noslide</a>
 functions.
-One first frame detection
-<a href="_modules/line_line.html#fit_poly">fit_poly</a>
-was used and all following frames
-<a href="_modules/line_line.html#fit_poly_noslide">fit_poly_noslide</a>.</p>
+The first frame is detected by the
+<a href="_modules/lane_line.html#fit_poly">fit_poly</a>
+function and all following frames were identified by the
+<a href="_modules/lane_line.html#fit_poly_noslide">fit_poly_noslide</a>
+function.</p>
 
 <p>The following steps were completed to determine the polynomial.</p>
 
 <table>
 <tr>
-<td>Step</td>
-<td>Description</td>
+<th>Step</th>
+<th>Description</th>
 </tr>
 <tr>
 <td>1</td>
 <td>
-the total number of non zero pixels were summed in the bottom half of the image,
-which provided a pixel count along the x axis
+In the
+<a href="_modules/lane_line.html#fit_poly">fit_poly</a> 
+function the total number of non zero pixels were summed in the bottom half of
+the image, which provided a pixel count along the x axis.
 </td>
 </tr>
 <tr>
 <td>2</td>
 <td>
-the starting searching location for left and right lane was selected base on the
-above pixel count being the highest
-</td>3</tr>
-the image was sliced horizontally into 9 parts, each being 80 pixels tall
-
+The center locations for the left and right lanes were selected base on the
+above pixel count being the highest.
+</td>
+</tr>
+<tr>
+<td>3</td>
+<td>
+The image was sliced horizontally into 9 windows, each being 80 pixels tall.
+</td>
+</tr>
+<tr>
+<td>4</td>
+<td>
+The lane line pixels for the first slice are calculated by using the
+center location determined in <em>Step 2</em> and then looking to the left and right of that
+center location by a margin and saving the non zero pixels. These non zero
+pixels were used to determine a new center location used by the next step.
+</td>
+</tr>
+<tr>
+<td>5</td>
+<td>
+The lane line pixels for the following slices are calculated by using the
+center location determined in <em>Step 4</em> and then looking to the left and right of that
+center location by a margin and saving the non zero pixels. These non zero
+pixels are used to determine a new center location which will be used for the
+line detection in the following windows.
+</td>
+</tr>
+<tr>
+<td>6</td>
+<td>
+The
+<a href="_modules/lane_line.html#get_poly">get_poly</a> 
+function then takes the lane pixels and and fits a second order polynomial to
+the data. This function returns the polynomial in both
+pixels and meters and also the radius of curvature. The calculation details of
+the radius of curvature are provided in the section below.
+</td>
+</tr>
+<tr>
+<td>7</td>
+<td>
+The
+<a href="_modules/lane_line.html#fit_poly_noslide">fit_poly_noslide</a> 
+function is used on a frame once a polynomial is determined for the previous frame.
+The search for the lane center does not need to be done because this is
+determined by the polynomial of the previous frame.
+</td>
+</tr>
 </table>
 
 <h2>
-<a id="user-content-radius-of-curvature-and-vehicle-position" class="anchor" href="#radius-of-curvature-and-vehicle-position" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Radius of curvature and vehicle position</h2>
+<a id="user-content-radius-of-curvature-and-vehicle-position" class="anchor" href="#radius-of-curvature-and-vehicle-position" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Radius Of Curvature And Vehicle Position</h2>
 
 <p>Once the polynomial is fitted, as describe in the above section,
 the radius of curvature is calculated using the
@@ -313,20 +354,20 @@ the radius of curvature is calculated using the
 </tbody>
 </table>
 
-<p>The variables <code>left_curverad</code> and <code>right_curverad</code> in function
-<a href="_modules/line_line.html#get_poly">get_poly</a>
+<p>The variables <code>left_curverad</code> and <code>right_curverad</code> in the function
+<a href="_modules/lane_line.html#get_poly">get_poly</a>
 shows the calculation of the radius of curvature based on the above equation.</p>
 
 <p>The <code>offset</code> variable in the
-<a href="_modules/line_line.html#find_lane_lines.ffl">find_lane_lines.ffl</a>
-function show the calucation for the position of the vehicle.</p>
+<a href="_modules/lane_line.html#find_lane_lines.fll">find_lane_lines.fll</a>
+function shows the calculation for the position of the vehicle.</p>
 
 <h2>
 <a id="user-content-lane-line-plot" class="anchor" href="#lane-line-plot" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Lane Line Plot</h2>
 
-<p>I implemented this step in
-<a href="_modules/line_line.html#poly2image">poly2image</a>
-function and examples output follows.</p>
+<p>I implemented this step in the
+<a href="_modules/lane_line.html#poly2image">poly2image</a>
+function and example outputs follow.</p>
 
 <table>
 <thead>
@@ -343,15 +384,19 @@ function and examples output follows.</p>
 </tbody>
 </table>
 
-<h3>
-<a id="user-content-pipeline-video" class="anchor" href="#pipeline-video" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pipeline (video)</h3>
+<h2>
+<a id="user-content-video-pipeline" class="anchor" href="#video-pipeline" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Video Pipeline</h2>
 
-<p>Here's a <a href="https://youtu.be/QwIH1pBiFEM">link to my video result</a></p>
+<p>Here's a <a href="https://youtu.be/QwIH1pBiFEM">link to my video result</a>
+which shows no catastrophic failures.</p>
 
-<p>I you want to generate the video yourself run the following command from in the <code>src</code> directory.</p>
+<p>If you want to generate the video yourself, run the following command from in the <code>src</code> directory.</p>
 
 <pre><code>./process_video.py 7 -c 1
 </code></pre>
+
+<p>Details of the pipeline can be seen in
+<a href="_modules/process_video.html">process_video.py</a>.</p>
 
 <h3>
 <a id="user-content-discussion" class="anchor" href="#discussion" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Discussion</h3>
@@ -365,7 +410,7 @@ function and examples output follows.</p>
 
 <ul>
 <li>created smaller videos with the problematic sections</li>
-<li>looped a large number of threshold values on the problematic sections</li>
+<li>looped through a large number of threshold values on the problematic sections</li>
 <li>identified the optimal threshold values</li>
 </ul>
 </li>
@@ -374,15 +419,16 @@ function and examples output follows.</p>
 <p>The code could be improved as follows.</p>
 
 <ul>
-<li>Allow for different image size.</li>
+<li>Allow for different image sizes.</li>
 <li>Allow for tuning of the polynomial fitting procedure so that you can change the windows size,
   number of windows, margins and the minimum number of pixels required to determine the window position.</li>
+<li>Complete the convolution curve fitting algorithm that was partially coded in the
+<a href="_modules/lane_line.html#find_window_centroids">find_windows_centroids</a>
+function but was not finally used.</li>
 </ul>
 
-<p>I am submitting the code at its present state in order to get feedback
-before I got to far off the beaten path.</p>
-
-<p>The submitted code could be improved and made more robust by implementing:</p>
+<p>From the video the lane detection does not appear to have any fatal lane detections
+but the submitted code could be improved and made more robust by implementing:</p>
 
 <ul>
 <li>sanity checking</li>
