@@ -2,7 +2,7 @@
 
 watchCode ()
 {
-	if [ -d rst; ]; then
+	if [ -d rst ]; then
 		rm rst/*
 	else
 		mkdir rst
