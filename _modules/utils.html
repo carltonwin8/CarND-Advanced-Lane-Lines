@@ -49,6 +49,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">@author: Carlton Joseph</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">cv2</span>
@@ -62,6 +63,7 @@
     <span class="n">pickle_file</span> <span class="o">=</span> <span class="s1">&#39;../dist_pickle.p&#39;</span>
     <span class="n">cal_glob</span> <span class="o">=</span> <span class="s1">&#39;../camera_cal/calibration*.jpg&#39;</span>
     <span class="n">cal_test_img</span> <span class="o">=</span> <span class="s1">&#39;../camera_cal/calibration1.jpg&#39;</span>
+    <span class="n">output_dir</span> <span class="o">=</span> <span class="s1">&#39;../output_images/&#39;</span>
     <span class="n">cal_test_img_undist</span> <span class="o">=</span> <span class="s1">&#39;../output_images/calibration1_undist.jpg&#39;</span>
     <span class="n">test_img1</span> <span class="o">=</span> <span class="s1">&#39;../test_images/straight_lines1.jpg&#39;</span>
     <span class="n">test_img2</span> <span class="o">=</span> <span class="s1">&#39;../test_images/straight_lines2.jpg&#39;</span>
@@ -86,7 +88,10 @@
 <div class="viewcode-block" id="fn.temp"><a class="viewcode-back" href="../rst/utils.html#utils.fn.temp">[docs]</a>    <span class="k">def</span> <span class="nf">temp</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">post</span><span class="p">):</span>
         <span class="n">base</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">no_ext</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="s1">&#39;../tmp/&#39;</span> <span class="o">+</span> <span class="n">no_ext</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">post</span> <span class="o">+</span><span class="s1">&#39;.jpg&#39;</span></div></div>
+        <span class="k">return</span> <span class="s1">&#39;../tmp/&#39;</span> <span class="o">+</span> <span class="n">no_ext</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">post</span> <span class="o">+</span><span class="s1">&#39;.jpg&#39;</span></div>
+
+<div class="viewcode-block" id="fn.output"><a class="viewcode-back" href="../rst/utils.html#utils.fn.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="p">,</span><span class="n">name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div></div>
     
 <div class="viewcode-block" id="distort_save"><a class="viewcode-back" href="../rst/utils.html#utils.distort_save">[docs]</a><span class="k">def</span> <span class="nf">distort_save</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">mtx</span><span class="p">,</span> <span class="n">dist</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -179,6 +184,78 @@
     <span class="c1"># overlay the orignal road image with window results</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">addWeighted</span><span class="p">(</span><span class="n">warpage</span><span class="p">,</span> <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">template</span><span class="p">,</span> <span class="n">weights</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">output</span></div>
+
+<div class="viewcode-block" id="log"><a class="viewcode-back" href="../rst/utils.html#utils.log">[docs]</a><span class="k">class</span> <span class="nc">log</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logdir</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logdir</span> <span class="o">=</span> <span class="n">logdir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ofset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datalog</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">logdir</span><span class="p">,</span> <span class="s1">&#39;log.p&#39;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="log.logfilename"><a class="viewcode-back" href="../rst/utils.html#utils.log.logfilename">[docs]</a>    <span class="k">def</span> <span class="nf">logfilename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subdir</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logdir</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subdir</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">count</span><span class="p">)))</span> <span class="o">+</span> <span class="s1">&#39;.jpeg&#39;</span></div>
+    
+<div class="viewcode-block" id="log.image"><a class="viewcode-back" href="../rst/utils.html#utils.log.image">[docs]</a>    <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">img_in</span><span class="p">,</span> <span class="n">img_out</span><span class="p">,</span> <span class="n">login</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">logout</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logfilename</span><span class="p">(</span><span class="s1">&#39;in&#39;</span><span class="p">),</span> <span class="n">img_in</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">login</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logfilename</span><span class="p">(</span><span class="s1">&#39;out&#39;</span><span class="p">),</span> <span class="n">img_out</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span></div>
+    
+<div class="viewcode-block" id="log.data"><a class="viewcode-back" href="../rst/utils.html#utils.log.data">[docs]</a>    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lf</span><span class="p">,</span> <span class="n">rf</span><span class="p">,</span> <span class="n">lc</span><span class="p">,</span> <span class="n">rc</span><span class="p">,</span> <span class="n">ofset</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lf</span><span class="p">,</span><span class="n">lf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rf</span><span class="p">,</span><span class="n">rf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="p">,</span><span class="n">lf</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc</span><span class="p">,</span><span class="n">rc</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ofset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofset</span><span class="p">,</span><span class="n">ofset</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="log.store_date"><a class="viewcode-back" href="../rst/utils.html#utils.log.store_date">[docs]</a>    <span class="k">def</span> <span class="nf">store_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dist_pickle</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;lf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lf</span>
+        <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;rf&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rf</span>
+        <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;lc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lc</span>
+        <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;rc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rc</span>
+        <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;ofset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ofset</span>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">dist_pickle</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datalog</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span></div>
+        
+<div class="viewcode-block" id="log.load_date"><a class="viewcode-back" href="../rst/utils.html#utils.log.load_date">[docs]</a>    <span class="k">def</span> <span class="nf">load_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dist_pickle</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datalog</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;lf&quot;</span><span class="p">],</span> <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;rf&quot;</span><span class="p">],</span> <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;lc&quot;</span><span class="p">],</span> \
+            <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;rc&quot;</span><span class="p">],</span> <span class="n">dist_pickle</span><span class="p">[</span><span class="s2">&quot;rc&quot;</span><span class="p">]</span></div></div>
+
+<div class="viewcode-block" id="analyze"><a class="viewcode-back" href="../rst/utils.html#utils.analyze">[docs]</a><span class="k">class</span> <span class="nc">analyze</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lf</span><span class="p">,</span> <span class="n">rf</span><span class="p">,</span> <span class="n">lc</span><span class="p">,</span> <span class="n">rc</span><span class="p">,</span> <span class="n">ofset</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lf</span> <span class="o">=</span> <span class="n">lf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rf</span> <span class="o">=</span> <span class="n">rf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lc</span> <span class="o">=</span> <span class="n">lc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rc</span> <span class="o">=</span> <span class="n">rc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ofset</span> <span class="o">=</span> <span class="n">ofset</span>
+        
+<div class="viewcode-block" id="analyze.plot1"><a class="viewcode-back" href="../rst/utils.html#utils.analyze.plot1">[docs]</a>    <span class="k">def</span> <span class="nf">plot1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rc</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lf</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lf</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lf</span><span class="p">[</span><span class="mi">2</span><span class="p">::</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="p">[</span><span class="mi">1</span><span class="p">::</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lc</span><span class="p">[</span><span class="mi">2</span><span class="p">::</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofset</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div></div>
+        
 </pre></div>
 
       </div>

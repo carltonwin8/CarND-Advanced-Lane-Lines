@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>config &#8212; Advanced Lane Lines Project 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+  </head>
+  <body role="document">
+      <div class="header" role="banner"><h1 class="heading"><a href="../index.html">
+          <span>Advanced Lane Lines Project 0.0.1 documentation</span></a></h1>
+        <h2 class="heading"><span>config</span></h2>
+      </div>
+      <div class="topnav" role="navigation" aria-label="top navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <h1>Source code for config</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">@author: carltonj2000</span>
+
+<span class="sd">Ideally a config file should not be a straight up python file</span>
+<span class="sd">but json, yaml, toml, etc.</span>
+<span class="sd">The file provides a video file to process and threshold values</span>
+<span class="sd">to process the video with.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="get_thresholds"><a class="viewcode-back" href="../rst/config.html#config.get_thresholds">[docs]</a><span class="k">def</span> <span class="nf">get_thresholds</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">sbl_x_thres_mins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">40</span><span class="p">]</span>
+        <span class="n">sbl_x_thres_maxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">120</span><span class="p">]</span>
+        <span class="n">hls_s_thres_mins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">160</span><span class="p">]</span>
+        <span class="n">hls_s_thres_maxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">225</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">sbl_x_thres_mins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">]</span>
+        <span class="n">sbl_x_thres_maxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">]</span>
+        <span class="n">hls_s_thres_mins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">180</span><span class="p">]</span>
+        <span class="n">hls_s_thres_maxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">sbl_x_thres_mins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">40</span><span class="p">]</span>
+        <span class="n">sbl_x_thres_maxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">120</span><span class="p">]</span>
+        <span class="n">hls_s_thres_mins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">180</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
+        <span class="n">hls_s_thres_maxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">225</span><span class="p">,</span> <span class="mi">205</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sbl_x_thres_mins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>
+        <span class="n">sbl_x_thres_maxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">120</span><span class="p">]</span>
+        <span class="n">hls_s_thres_mins</span> <span class="o">=</span> <span class="p">[</span><span class="mi">180</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
+        <span class="n">hls_s_thres_maxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">255</span><span class="p">,</span> <span class="mi">225</span><span class="p">,</span> <span class="mi">205</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">sbl_x_thres_mins</span><span class="p">,</span> <span class="n">sbl_x_thres_maxs</span><span class="p">,</span> <span class="n">hls_s_thres_mins</span><span class="p">,</span> <span class="n">hls_s_thres_maxs</span></div>
+
+<div class="viewcode-block" id="get_videos"><a class="viewcode-back" href="../rst/config.html#config.get_videos">[docs]</a><span class="k">def</span> <span class="nf">get_videos</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">videos_in</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;../../project_video_1s.mp4&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">videos_in</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;../../project_video_s20t6.mp4&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">videos_in</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;../../project_video_s38t5.mp4&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="n">videos_in</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;../../project_video_4s.mp4&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+        <span class="n">videos_in</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;../../project_video_s20t6.mp4&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;../../project_video_s38t5.mp4&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>
+        <span class="n">videos_in</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;../../project_video_s20t7.mp4&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;../../project_video_s38t6.mp4&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">videos_in</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;../project_video.mp4&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">videos_in</span></div>
+
+
+<div class="viewcode-block" id="get_combinations"><a class="viewcode-back" href="../rst/config.html#config.get_combinations">[docs]</a><span class="k">def</span> <span class="nf">get_combinations</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">combinations</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">225</span><span class="p">]</span>
+        <span class="p">]</span>
+    <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">combinations</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">225</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+        <span class="p">]</span>
+    <span class="k">elif</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">combinations</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">225</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">225</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">225</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">160</span><span class="p">,</span> <span class="mi">255</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+        <span class="p">]</span>
+    <span class="k">return</span> <span class="n">combinations</span></div>
+</pre></div>
+
+      </div>
+      <div class="bottomnav" role="navigation" aria-label="bottom navigation">
+      
+        <p>
+        <a class="uplink" href="../index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Carlton Joseph.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
+    </div>
+  </body>
+</html>

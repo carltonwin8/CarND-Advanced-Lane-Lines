@@ -144,9 +144,10 @@
 
 <dl class="class">
 <dt id="lane_line.find_lane_lines">
-<em class="property">class </em><code class="descclassname">lane_line.</code><code class="descname">find_lane_lines</code><span class="sig-paren">(</span><em>mtx</em>, <em>dist</em>, <em>src</em>, <em>dst</em>, <em>M</em>, <em>Minv</em>, <em>retpt=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_lane_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_lane_lines" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">lane_line.</code><code class="descname">find_lane_lines</code><span class="sig-paren">(</span><em>mtx</em>, <em>dist</em>, <em>src</em>, <em>dst</em>, <em>M</em>, <em>Minv</em>, <em>sbl_x_thres_min</em>, <em>sbl_x_thres_max</em>, <em>hls_s_thres_min</em>, <em>hls_s_thres_max</em>, <em>log</em>, <em>retpt=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_lane_lines"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_lane_lines" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>find image lane line for given camera calibartion and perspective transform values</p>
+<p>find image lane line for given camera calibartion and perspective transform
+values</p>
 <dl class="method">
 <dt id="lane_line.find_lane_lines.fll">
 <code class="descname">fll</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#find_lane_lines.fll"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.find_lane_lines.fll" title="Permalink to this definition">¶</a></dt>
@@ -168,6 +169,18 @@
 <dl class="function">
 <dt id="lane_line.fit_poly">
 <code class="descclassname">lane_line.</code><code class="descname">fit_poly</code><span class="sig-paren">(</span><em>binary_warped</em>, <em>img_size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#fit_poly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.fit_poly" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="lane_line.fit_poly_noslide">
+<code class="descclassname">lane_line.</code><code class="descname">fit_poly_noslide</code><span class="sig-paren">(</span><em>binary_warped</em>, <em>left_fit</em>, <em>right_fit</em>, <em>img_size=(1280</em>, <em>720)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#fit_poly_noslide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.fit_poly_noslide" title="Permalink to this definition">¶</a></dt>
+<dd><p>find line pixels with a warped binary image
+from the next frame of video (also called &#8220;binary_warped&#8221;)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lane_line.get_poly">
+<code class="descclassname">lane_line.</code><code class="descname">get_poly</code><span class="sig-paren">(</span><em>nonzerox</em>, <em>nonzeroy</em>, <em>left_lane_inds</em>, <em>right_lane_inds</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#get_poly"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.get_poly" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -227,23 +240,21 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>img</strong> &#8211; image</li>
 <li><strong>s_thresh_min</strong> &#8211; threshold min</li>
 <li><strong>s_thresh_max</strong> &#8211; threshold max</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">binary image</p>
-</td>
-</tr>
 </tbody>
 </table>
+<p>Returns: binary image</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="lane_line.threshold">
-<code class="descclassname">lane_line.</code><code class="descname">threshold</code><span class="sig-paren">(</span><em>img</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#threshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.threshold" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">lane_line.</code><code class="descname">threshold</code><span class="sig-paren">(</span><em>img</em>, <em>sbl_x_thres_min</em>, <em>sbl_x_thres_max</em>, <em>hls_s_thres_min</em>, <em>hls_s_thres_max</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/lane_line.html#threshold"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#lane_line.threshold" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detects the edges by ORing the sobel x and hls s channel threshold detects</p>
 </dd></dl>
 

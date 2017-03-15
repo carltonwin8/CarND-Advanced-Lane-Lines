@@ -256,101 +256,139 @@ dst <span class="pl-k">=</span> np.float32(
 <h4>
 <a id="user-content-4-describe-how-and-identify-where-in-your-code-you-identified-lane-line-pixels-and-fit-their-positions-with-a-polynomial" class="anchor" href="#4-describe-how-and-identify-where-in-your-code-you-identified-lane-line-pixels-and-fit-their-positions-with-a-polynomial" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?</h4>
 
-<p>Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:</p>
+<p>After the perspective transform the lane lines were identified by the
+<a href="_modules/line_line.html#fit_poly">fit_poly</a> and
+<a href="_modules/line_line.html#fit_poly_noslide">fit_poly_noslide</a>
+functions.
+One first frame detection
+<a href="_modules/line_line.html#fit_poly">fit_poly</a>
+was used and all following frames
+<a href="_modules/line_line.html#fit_poly_noslide">fit_poly_noslide</a>.</p>
 
-<p>![alt text][image5]</p>
+<p>The following steps were completed to determine the polynomial.</p>
+
+<table>
+<tr>
+<td>Step</td>
+<td>Description</td>
+</tr>
+<tr>
+<td>1</td>
+<td>
+the total number of non zero pixels were summed in the bottom half of the image,
+which provided a pixel count along the x axis
+</td>
+</tr>
+<tr>
+<td>2</td>
+<td>
+the starting searching location for left and right lane was selected base on the
+above pixel count being the highest
+</td>3</tr>
+the image was sliced horizontally into 9 parts, each being 80 pixels tall
+
+</table>
 
 <h2>
-<a id="user-content-radius-of-curvature" class="anchor" href="#radius-of-curvature" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Radius of curvature</h2>
+<a id="user-content-radius-of-curvature-and-vehicle-position" class="anchor" href="#radius-of-curvature-and-vehicle-position" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Radius of curvature and vehicle position</h2>
 
-<h4>
-<a id="user-content-5-describe-how-and-identify-where-in-your-code-you-calculated-the-radius-of-curvature-of-the-lane-and-the-position-of-the-vehicle-with-respect-to-center" class="anchor" href="#5-describe-how-and-identify-where-in-your-code-you-calculated-the-radius-of-curvature-of-the-lane-and-the-position-of-the-vehicle-with-respect-to-center" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.</h4>
+<p>Once the polynomial is fitted, as describe in the above section,
+the radius of curvature is calculated using the
+<code>curve of poly</code> formula below.</p>
 
-<p>I did this in lines # through # in my code in <code>my_other_file.py</code></p>
+<table>
+<thead>
+<tr>
+<th align="center">2nd order poly</th>
+<th align="center">curvature of point</th>
+<th align="center">curve of poly</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><a href="output_images/secondOrder.png" target="_blank"><img src="output_images/secondOrder.png" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="output_images/curvature_general.png" target="_blank"><img src="output_images/curvature_general.png" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="output_images/curvature_secondOrder.png" target="_blank"><img src="output_images/curvature_secondOrder.png" alt="" style="max-width:100%;"></a></td>
+</tr>
+</tbody>
+</table>
+
+<p>The variables <code>left_curverad</code> and <code>right_curverad</code> in function
+<a href="_modules/line_line.html#get_poly">get_poly</a>
+shows the calculation of the radius of curvature based on the above equation.</p>
+
+<p>The <code>offset</code> variable in the
+<a href="_modules/line_line.html#find_lane_lines.ffl">find_lane_lines.ffl</a>
+function show the calucation for the position of the vehicle.</p>
 
 <h2>
 <a id="user-content-lane-line-plot" class="anchor" href="#lane-line-plot" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Lane Line Plot</h2>
 
-<p>of curvature</p>
+<p>I implemented this step in
+<a href="_modules/line_line.html#poly2image">poly2image</a>
+function and examples output follows.</p>
 
-<h4>
-<a id="user-content-6-provide-an-example-image-of-your-result-plotted-back-down-onto-the-road-such-that-the-lane-area-is-identified-clearly" class="anchor" href="#6-provide-an-example-image-of-your-result-plotted-back-down-onto-the-road-such-that-the-lane-area-is-identified-clearly" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.</h4>
-
-<p>I implemented this step in lines # through # in my code in <code>yet_another_file.py</code> in the function <code>map_lane()</code>.  Here is an example of my result on a test image:</p>
-
-<p>![alt text][image6]</p>
-
-<hr>
+<table>
+<thead>
+<tr>
+<th align="center">test4.jpg</th>
+<th align="center">test5.jpg</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"><a href="output_images/test4.jpg" target="_blank"><img src="output_images/test4.jpg" alt="" style="max-width:100%;"></a></td>
+<td align="center"><a href="output_images/test5.jpg" target="_blank"><img src="output_images/test5.jpg" alt="" style="max-width:100%;"></a></td>
+</tr>
+</tbody>
+</table>
 
 <h3>
 <a id="user-content-pipeline-video" class="anchor" href="#pipeline-video" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pipeline (video)</h3>
 
-<h4>
-<a id="user-content-1-provide-a-link-to-your-final-video-output--your-pipeline-should-perform-reasonably-well-on-the-entire-project-video-wobbly-lines-are-ok-but-no-catastrophic-failures-that-would-cause-the-car-to-drive-off-the-road" class="anchor" href="#1-provide-a-link-to-your-final-video-output--your-pipeline-should-perform-reasonably-well-on-the-entire-project-video-wobbly-lines-are-ok-but-no-catastrophic-failures-that-would-cause-the-car-to-drive-off-the-road" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).</h4>
+<p>Here's a <a href="https://youtu.be/QwIH1pBiFEM">link to my video result</a></p>
 
-<p>Here's a <a href="./project_video.mp4">link to my video result</a></p>
+<p>I you want to generate the video yourself run the following command from in the <code>src</code> directory.</p>
 
-<hr>
+<pre><code>./process_video.py 7 -c 1
+</code></pre>
 
 <h3>
 <a id="user-content-discussion" class="anchor" href="#discussion" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Discussion</h3>
 
-<h4>
-<a id="user-content-1-briefly-discuss-any-problems--issues-you-faced-in-your-implementation-of-this-project--where-will-your-pipeline-likely-fail--what-could-you-do-to-make-it-more-robust" class="anchor" href="#1-briefly-discuss-any-problems--issues-you-faced-in-your-implementation-of-this-project--where-will-your-pipeline-likely-fail--what-could-you-do-to-make-it-more-robust" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?</h4>
-
-<p>Here I'll talk about the approach I took, what techniques I used, what worked
-and why, where the pipeline might fail and how I might improve it if I were
-going to pursue this project further.  </p>
-
-<h4>
-<a id="user-content-issues" class="anchor" href="#issues" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Issues</h4>
+<p>The approach/steps I took to develop the project was to:</p>
 
 <ul>
-<li>straight_lines1 show that the provided transformation coefficients did not produce
-a straight line. To produce a straigh line the coefficients were changed from
-(), (), (), () to (), (), (), ().</li>
-<li>test5 image had too much of noise from the shadows and the HLS minimum threshold was
-tuned from the provided 150 up to 180.</li>
-<li>test4 image the curve in the road was too large and the sliding windows was not
-large enough. The value of 100 was increased so that I correctly predicted the
-road curve.</li>
-</ul>
-
-<h4>
-<a id="user-content-future-enhancements" class="anchor" href="#future-enhancements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Future Enhancements</h4>
+<li>complete the code necessary to generate the images required for this documentation</li>
+<li>create a pipeline of the above code to process the video and generate the output file</li>
+<li>found the problematic parts in the video output
 
 <ul>
-<li>
-<p>Change hard coded values noted below to setup parameters so code can be tuned and generalized.</p>
-
-<ul>
-<li>Allow for different image sized.</li>
-<li>Allow for tuning of threshold values</li>
-<li>Allow for tuning of the polynomial fitting procedure so that you can change the windows size,
-number of windows, margins and the minimum number of pixels required to determine the window position.</li>
+<li>created smaller videos with the problematic sections</li>
+<li>looped a large number of threshold values on the problematic sections</li>
+<li>identified the optimal threshold values</li>
 </ul>
 </li>
 </ul>
 
-<h1>
-<a id="user-content-notes-to-be-deleted" class="anchor" href="#notes-to-be-deleted" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Notes To Be Deleted</h1>
-
-<h2>
-<a id="user-content-to-do" class="anchor" href="#to-do" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>TO DO</h2>
-
-<p>In no particular order:</p>
+<p>The code could be improved as follows.</p>
 
 <ul>
-<li>implement convolution for finding lines</li>
-<li>compare convolution to sliding windows line finding by writing analysis plotting code</li>
-<li>write a loop to test different threshold values for the difficult train part and
-collect the missed frames and chose the best setting</li>
-<li>write routines to save images for bad line identification and then manually
-see how I can improve it</li>
-<li>figure out why the radius of curvature go nuts in some part of the graph</li>
-<li>implement the smoothing algorithm and compare missed images look</li>
-<li>implement not blindly searching for lane lines but using the previous lane results to speed up
-the search and collect statistics on this.</li>
+<li>Allow for different image size.</li>
+<li>Allow for tuning of the polynomial fitting procedure so that you can change the windows size,
+  number of windows, margins and the minimum number of pixels required to determine the window position.</li>
+</ul>
+
+<p>I am submitting the code at its present state in order to get feedback
+before I got to far off the beaten path.</p>
+
+<p>The submitted code could be improved and made more robust by implementing:</p>
+
+<ul>
+<li>sanity checking</li>
+<li>look-ahead filter</li>
+<li>reset based on the sanity checking and</li>
+<li>smoothing</li>
 </ul>
 
               </article>
