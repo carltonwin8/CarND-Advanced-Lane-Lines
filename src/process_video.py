@@ -7,7 +7,6 @@ from moviepy.editor import VideoFileClip
 import lane_line as ll
 import utils as utl
 import argparse
-import sys
 import config
 
 def main():
@@ -22,7 +21,7 @@ def main():
         sbl_x_thres_mins, sbl_x_thres_maxs, hls_s_thres_mins, hls_s_thres_maxs = config.get_thresholds(args.tranges)
         print(sbl_x_thres_mins, sbl_x_thres_maxs, hls_s_thres_mins, hls_s_thres_maxs)
     if args.tcombinations != -1:
-        combinations = config.combinations(args.tcombinations)
+        combinations = config.get_combinations(args.tcombinations)
         print(combinations)
     videos_in = config.get_videos(args.videos)
     print(videos_in)

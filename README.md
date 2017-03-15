@@ -124,78 +124,88 @@ The transform was tested on the images noted below to verify that the lines appe
 ## Identify Lane Lines
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+After the perspective transform the lane lines were identified by the
+[fit_poly](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/line_line.html#fit_poly) and
+[fit_poly_noslide](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/line_line.html#fit_poly_noslide)
+functions.
+One first frame detection
+[fit_poly](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/line_line.html#fit_poly)
+was used and all following frames
+[fit_poly_noslide](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/line_line.html#fit_poly_noslide).
 
-![alt text][image5]
+The following steps were completed to determine the polynomial.
 
-## Radius of curvature
+<table>
+<tr><td>Step</td><td>Description</td></tr>
+<tr><td>1</td><td>
+the total number of non zero pixels were summed in the bottom half of the image,
+which provided a pixel count along the x axis
+</td></tr>
+<tr><td>2</td><td>
+the starting searching location for left and right lane was selected base on the
+above pixel count being the highest
+</td>3</tr>
+the image was sliced horizontally into 9 parts, each being 80 pixels tall
+</td></tr>
+</table>
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+## Radius of curvature and vehicle position
 
-I did this in lines # through # in my code in `my_other_file.py`
+Once the polynomial is fitted, as describe in the above section,
+the radius of curvature is calculated using the
+`curve of poly` formula below.
+
+| 2nd order poly | curvature of point | curve of poly |
+|:---:|:---:|:---:|
+| ![](output_images/secondOrder.png) | ![](output_images/curvature_general.png ) | ![](output_images/curvature_secondOrder.png) |
+
+The variables `left_curverad` and `right_curverad` in function
+[get_poly](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/line_line.html#get_poly)
+shows the calculation of the radius of curvature based on the above equation.
+
+The `offset` variable in the
+[find_lane_lines.ffl](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/line_line.html#find_lane_lines.ffl)
+function show the calucation for the position of the vehicle.
 
 ## Lane Line Plot
 
- of curvature
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+I implemented this step in
+[poly2image](http://carltonwin8.github.io/CarND-Advanced-Lane-Lines/_modules/line_line.html#poly2image)
+function and examples output follows.
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
-
-![alt text][image6]
-
----
+| test4.jpg | test5.jpg |
+|:---:|:---:|
+| ![](output_images/test4.jpg) | ![](output_images/test5.jpg) |
 
 ### Pipeline (video)
 
-#### 1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+Here's a [link to my video result](https://youtu.be/QwIH1pBiFEM)
 
-Here's a [link to my video result](./project_video.mp4)
-
----
+I you want to generate the video yourself run the following command from in the `src` directory.
+```
+./process_video.py 7 -c 1
+```
 
 ### Discussion
 
-#### 1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+The approach/steps I took to develop the project was to:
+  - complete the code necessary to generate the images required for this documentation
+  - create a pipeline of the above code to process the video and generate the output file
+  - found the problematic parts in the video output
+    - created smaller videos with the problematic sections
+    - looped a large number of threshold values on the problematic sections
+    - identified the optimal threshold values
 
-Here I'll talk about the approach I took, what techniques I used, what worked
-and why, where the pipeline might fail and how I might improve it if I were
-going to pursue this project further.  
-
-#### Issues
-
-  - straight_lines1 show that the provided transformation coefficients did not produce
-    a straight line. To produce a straigh line the coefficients were changed from
-    (), (), (), () to (), (), (), ().
-  - test5 image had too much of noise from the shadows and the HLS minimum threshold was
-    tuned from the provided 150 up to 180.
-  - test4 image the curve in the road was too large and the sliding windows was not
-    large enough. The value of 100 was increased so that I correctly predicted the
-    road curve.
-
-#### Future Enhancements
-
-  - Change hard coded values noted below to setup parameters so code can be tuned and generalized.
-
-    - Allow for different image sized.
-    - Allow for tuning of threshold values
-    - Allow for tuning of the polynomial fitting procedure so that you can change the windows size,
+The code could be improved as follows.
+  - Allow for different image size.
+  - Allow for tuning of the polynomial fitting procedure so that you can change the windows size,
       number of windows, margins and the minimum number of pixels required to determine the window position.
 
+I am submitting the code at its present state in order to get feedback
+before I got to far off the beaten path.
 
-# Notes To Be Deleted
-
-
-## TO DO
-
-In no particular order:
-
-  - implement convolution for finding lines
-  - compare convolution to sliding windows line finding by writing analysis plotting code
-  - write a loop to test different threshold values for the difficult train part and
-    collect the missed frames and chose the best setting
-  - write routines to save images for bad line identification and then manually
-    see how I can improve it
-  - figure out why the radius of curvature go nuts in some part of the graph
-  - implement the smoothing algorithm and compare missed images look
-  - implement not blindly searching for lane lines but using the previous lane results to speed up
-    the search and collect statistics on this.
+The submitted code could be improved and made more robust by implementing:
+ - sanity checking
+ - look-ahead filter
+ - reset based on the sanity checking and
+ - smoothing

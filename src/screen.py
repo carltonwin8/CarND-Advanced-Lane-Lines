@@ -7,6 +7,7 @@ import cv2
 import lane_line as ll
 import utils as utl
 import display
+import config
 
 def undistort1(fn, mtx, dist, execute):
     if execute:
@@ -57,12 +58,21 @@ def lane_line(execute):
         src, dst = ll.perspective_transform_values()
         M = ll.perspective_transform_map(src, dst)
         Minv = ll.perspective_transform_map(dst,src)
-        fl = ll.find_lane_lines(mtx, dist, src, dst, M, Minv)
-        for imgfn in utl.fn.testset:
-            img = cv2.imread(imgfn)
-            print(imgfn)
-            display.imshow(img)            
-            display.imshow(fl.fll(img))
+        
+        combinations = config.get_combinations(1)
+        log = utl.log("../../project/img.log")
+
+        for combo in combinations:
+            sbl_x_thres_min, sbl_x_thres_max, hls_s_thres_min, hls_s_thres_max = combo  
+            fl = ll.find_lane_lines(mtx, dist, src, dst, M, Minv,
+                                    sbl_x_thres_min, sbl_x_thres_max, 
+                                    hls_s_thres_min, hls_s_thres_max, log)
+            for imgfn in utl.fn.testset2:
+                img = cv2.imread(imgfn)
+                print(imgfn, sbl_x_thres_min, sbl_x_thres_max, 
+                      hls_s_thres_min, hls_s_thres_max)
+                #display.imshow(img)            
+                display.imshow(fl.fll(img))
         
 def main():
     """

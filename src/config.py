@@ -12,9 +12,9 @@ to process the video with.
 def get_thresholds(t):
     if t == 1:
         sbl_x_thres_mins = [40]
-        sbl_x_thres_maxs = [80]
+        sbl_x_thres_maxs = [120]
         hls_s_thres_mins = [160]
-        hls_s_thres_maxs = [205]
+        hls_s_thres_maxs = [225]
     elif t == 2:
         sbl_x_thres_mins = [20]
         sbl_x_thres_maxs = [100]
@@ -34,14 +34,17 @@ def get_thresholds(t):
 
 def get_videos(x):
     if x == 1:
-        videos_in = ["../../project_video_4s.mp4"]
+        videos_in = ["../../project_video_1s.mp4"]
     elif x == 2:
         videos_in = ["../../project_video_s20t6.mp4"]
     elif x == 3:
         videos_in = ["../../project_video_s38t5.mp4"]
     elif x == 4:
-        videos_in = ["../../project_video_1s.mp4"]
+        videos_in = ["../../project_video_4s.mp4"]
     elif x == 5:
+        videos_in = ["../../project_video_s20t6.mp4",
+                     "../../project_video_s38t5.mp4"]
+    elif x == 6:
         videos_in = ["../../project_video_s20t7.mp4",
                      "../../project_video_s38t6.mp4"]
     else:
@@ -52,10 +55,14 @@ def get_videos(x):
 def get_combinations(c):
     if c == 1:
         combinations = [
+            [40, 120, 160, 225]
+        ]
+    elif c == 2:
+        combinations = [
             [40, 120, 160, 225],
             [40, 120, 180, 255]
         ]
-    elif c == 2:
+    elif c == 3:
         combinations = [
             [40, 100, 160, 225],
             [40, 100, 160, 255],

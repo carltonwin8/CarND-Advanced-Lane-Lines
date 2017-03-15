@@ -165,7 +165,6 @@ def draw_lines(img, lines, color=[255, 0, 0], thickness=10, weights=(0.5, 0.5)):
     
 def fit_poly(binary_warped, img_size=(1280, 720)):
     ## use to get histogram for part of the binary image
-    histogram = np.sum(binary_warped[int(img_size[0]/2):,:], axis=0)
     # Take a histogram of the bottom half of the image
     histogram = np.sum(binary_warped[int(binary_warped.shape[0]/2):,:], axis=0)
     # Find the peak of the left and right halves of the histogram
@@ -217,8 +216,16 @@ def fit_poly(binary_warped, img_size=(1280, 720)):
     # Concatenate the arrays of indices
     left_lane_inds = np.concatenate(left_lane_inds)
     right_lane_inds = np.concatenate(right_lane_inds)
+    
+    left_fit, right_fit, left_curverad, \
+    right_curverad, left_fit_cr, right_fit_cr = \
+        get_poly(nonzerox, nonzeroy, left_lane_inds, right_lane_inds)
 
-    # Extract left and right line pixel positions
+    return left_fit, right_fit, left_curverad, right_curverad, left_fit_cr, right_fit_cr   
+        
+    
+def get_poly(nonzerox, nonzeroy, left_lane_inds, right_lane_inds):
+     # Extract left and right line pixel positions
     leftx = nonzerox[left_lane_inds]
     lefty = nonzeroy[left_lane_inds]
     rightx = nonzerox[right_lane_inds]
@@ -241,7 +248,35 @@ def fit_poly(binary_warped, img_size=(1280, 720)):
     left_curverad = ((1 + (2*left_fit_cr[0]*ly_eval*ym_per_pix + left_fit_cr[1])**2)**1.5) / np.absolute(2*left_fit_cr[0])
     right_curverad = ((1 + (2*right_fit_cr[0]*ry_eval*ym_per_pix + right_fit_cr[1])**2)**1.5) / np.absolute(2*right_fit_cr[0])
     
-    return left_fit, right_fit, left_curverad, right_curverad
+    return left_fit, right_fit, left_curverad, right_curverad, left_fit_cr, right_fit_cr   
+
+def fit_poly_noslide(binary_warped, left_fit, right_fit, img_size=(1280, 720)):
+    """
+    find line pixels with a warped binary image 
+    from the next frame of video (also called "binary_warped")
+    """
+    nonzero = binary_warped.nonzero()
+    nonzeroy = np.array(nonzero[0])
+    nonzerox = np.array(nonzero[1])
+    margin = 100
+    left_lane_inds = ((nonzerox > (left_fit[0]*(nonzeroy**2) + left_fit[1]*nonzeroy + left_fit[2] - margin)) & (nonzerox < (left_fit[0]*(nonzeroy**2) + left_fit[1]*nonzeroy + left_fit[2] + margin))) 
+    right_lane_inds = ((nonzerox > (right_fit[0]*(nonzeroy**2) + right_fit[1]*nonzeroy + right_fit[2] - margin)) & (nonzerox < (right_fit[0]*(nonzeroy**2) + right_fit[1]*nonzeroy + right_fit[2] + margin)))  
+    
+    # Again, extract left and right line pixel positions
+    leftx = nonzerox[left_lane_inds]
+    lefty = nonzeroy[left_lane_inds] 
+    rightx = nonzerox[right_lane_inds]
+    righty = nonzeroy[right_lane_inds]
+    # Fit a second order polynomial to each
+    left_fit = np.polyfit(lefty, leftx, 2)
+    right_fit = np.polyfit(righty, rightx, 2)
+    
+    left_fit, right_fit, left_curverad, \
+    right_curverad, left_fit_cr, right_fit_cr = \
+        get_poly(nonzerox, nonzeroy, left_lane_inds, right_lane_inds)
+
+    return left_fit, right_fit, left_curverad, right_curverad, left_fit_cr, right_fit_cr   
+
 
 def poly2image(img, left_fit, right_fit, Minv):
     # Generate x and y values for plotting
@@ -390,7 +425,10 @@ class find_lane_lines():
         self.sbl_x_thres_max = sbl_x_thres_max
         self.hls_s_thres_min = hls_s_thres_min
         self.hls_s_thres_max = hls_s_thres_max
-        
+        self.first = True
+        self.lf_old = None
+        self.rf_old = None
+            
     def fll(self, img):
         undist = undistort(img, self.mtx, self.dist)
         thresh = threshold(undist, self.sbl_x_thres_min, self.sbl_x_thres_max, 
@@ -398,17 +436,24 @@ class find_lane_lines():
         pt = perspective_transform(thresh, self.M)
         if self.retpt:
             return pt
-        lf_f, rf_f, lc_f, rc_f = fit_poly(pt)
+
+        if self.first:
+            lf_f, rf_f, lc_f, rc_f, lf_cr, rf_cr = fit_poly(pt)
+            self.first = False;
+        else:
+            lf_f, rf_f, lc_f, rc_f, lf_cr, rf_cr = fit_poly_noslide(pt, self.lf_old, self.rf_old)            
+        self.lf_old = lf_f
+        self.rf_old = rf_f
+            
         lf, lc = self.check_l.check_resutls(lf_f, lc_f)
         rf, rc = self.check_r.check_resutls(rf_f, rc_f)
         ll = poly2image(undist, lf, rf, self.Minv)
-        ofset = (rf[0] - lf[0])/2 - img.shape[0]/2
-        text = "Left/Right Curvatures = " + \
-            str(int(lc)) + "/" + str(int(rc)) + " meters" + \
-            ", ofset = " + str(int(ofset))
-        out = cv2.putText(ll, text, (50,50), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
+        offset = (rf_cr[2] + lf_cr[2])/2 - img.shape[0]*3.7/700/2        
+        text = "Left/Right Curvatures = {:5.0f}/{:5.0f}, offset = {:3.1f} (meters)".format(
+                  lc, rc, offset)
+        out = cv2.putText(ll, text, (100,50), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
         #self.log.image(img, out)
-        #self.log.data(lf, rf, lc, rc, ofset)
+        self.log.data(lf, rf, lc, rc, offset)
         return out
     
     def history(self):

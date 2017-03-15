@@ -17,6 +17,7 @@ class fn():
     pickle_file = '../dist_pickle.p'
     cal_glob = '../camera_cal/calibration*.jpg'
     cal_test_img = '../camera_cal/calibration1.jpg'
+    output_dir = '../output_images/'
     cal_test_img_undist = '../output_images/calibration1_undist.jpg'
     test_img1 = '../test_images/straight_lines1.jpg'
     test_img2 = '../test_images/straight_lines2.jpg'
@@ -42,6 +43,9 @@ class fn():
         base = name.split('/')[-1]
         no_ext = base.split('.')[0]
         return '../tmp/' + no_ext + '_' + post +'.jpg'
+
+    def output(self, name):
+        return os.path.join(self.output_dir,name.split('/')[-1])
     
 def distort_save(file, mtx, dist):
     """

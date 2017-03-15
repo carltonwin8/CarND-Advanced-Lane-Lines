@@ -7,6 +7,7 @@ import cv2
 import lane_line as ll
 import utils as utl
 import display
+import config
 
 def undistort(execute):
     if execute:
@@ -56,9 +57,28 @@ def identify_line(execute):
         print(output.shape)
         display.imshow(output)
 
-def process_video(execute):
+        
+def lane_line(execute):
     if execute:
-
+        mtx, dist = utl.distort_load(utl.fn.pickle_file)
+        src, dst = ll.perspective_transform_values()
+        M = ll.perspective_transform_map(src, dst)
+        Minv = ll.perspective_transform_map(dst,src)
+        
+        combinations = config.get_combinations(1)
+        log = utl.log("../../project/img.log")
+        utl_fn = utl.fn()
+        for combo in combinations:
+            sbl_x_thres_min, sbl_x_thres_max, hls_s_thres_min, hls_s_thres_max = combo  
+            fl = ll.find_lane_lines(mtx, dist, src, dst, M, Minv,
+                                    sbl_x_thres_min, sbl_x_thres_max, 
+                                    hls_s_thres_min, hls_s_thres_max, log)
+            for imgfn in utl.fn.testset2:
+                img = cv2.imread(imgfn)
+                print(imgfn, sbl_x_thres_min, sbl_x_thres_max, 
+                      hls_s_thres_min, hls_s_thres_max)
+                #display.imshow(img)            
+                cv2.imwrite(utl_fn.output(imgfn), fl.fll(img))
 def main():
     """
     Generate image files for the documentation
@@ -68,6 +88,7 @@ def main():
     edge_detect(False)
     transform(False)
     identify_line(False)
+    lane_line(True)
 
 if __name__ == "__main__":
     main()

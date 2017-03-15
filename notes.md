@@ -6,17 +6,8 @@ This is my scratch pad for ideas and is not official documentation.
 
 In no particular order:
 
-  - with present algorithm
-    - save all the frames to a directory
-    - run code collect all values and correlate them to a frames
-    - do the same thing for partial frame and see if I can correlate that with the full video
   - implement convolution for finding lines
-  - compare convolution to sliding windows line finding by writing analysis plotting code
-  - write a loop to test different threshold values for the difficult train part and
-    collect the missed frames and chose the best setting
-  - write routines to save images for bad line identification and then manually
-    see how I can improve it
-  - figure out why the radius of curvature go nuts in some part of the graph
+    - compare convolution to sliding windows line finding by writing analysis plotting code
   - implement the smoothing algorithm and compare missed images look
   - implement not blindly searching for lane lines but using the previous lane results to speed up
     the search and collect statistics on this.
