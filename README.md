@@ -207,7 +207,7 @@ function and example outputs follow.
 ## Video Pipeline
 
 The final video that shows no catastrophic failures can be viewed
-[here](../output_images/project_video_out.mp4)
+[here](output_images/project_video_out.mp4)
 or on [youtube](https://youtu.be/QwIH1pBiFEM).
 
 If you want to generate the video yourself, run the following command from in the `src` directory.
