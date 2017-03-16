@@ -147,6 +147,8 @@ class log():
         self.lc = np.array([])
         self.rf = np.array([])
         self.rc = np.array([])
+        self.left_base_undist = np.array([])
+        self.right_base_undist = np.array([])
         self.ofset = np.array([])
         self.datalog = os.path.join(logdir, 'log.p')
 
@@ -160,11 +162,13 @@ class log():
             cv2.imwrite(self.logfilename('out'), img_out)
         self.count += 1
     
-    def data(self, lf, rf, lc, rc, ofset):
+    def data(self, lf, rf, lc, rc, left_base_undist, right_base_undist, ofset):
         self.lf = np.append(self.lf,lf)
         self.rf = np.append(self.rf,rf)
-        self.lc = np.append(self.lc,lf)
+        self.lc = np.append(self.lc,lc)
         self.rc = np.append(self.rc,rc)
+        self.left_base_undist = np.append(self.left_base_undist,left_base_undist)
+        self.right_base_undist = np.append(self.right_base_undist,right_base_undist)
         self.ofset = np.append(self.ofset,ofset)
 
     def store_date(self):
@@ -182,31 +186,48 @@ class log():
             dist_pickle["rc"], dist_pickle["rc"]
 
 class analyze():
-    def __init__(self, lf, rf, lc, rc, ofset, count=0):
+    def __init__(self, lf, rf, lc, rc, left_base_undist, right_base_undist, ofset, count=0):
         self.count = count
         self.lf = lf
         self.rf = rf
         self.lc = lc
         self.rc = rc
+        self.right_base_undist = right_base_undist
+        self.left_base_undist = left_base_undist
         self.ofset = ofset
         
     def plot1(self):
-        plt.plot(self.lc)
-        plt.show()
-        plt.plot(self.rc)
-        plt.show()
+        print("Left x^2")
         plt.plot(self.lf[0::3])
         plt.show()
+        print("Right x^2")
+        plt.plot(self.rf[0::3])
+        plt.show()
+        print("Left x")
         plt.plot(self.lf[1::3])
         plt.show()
+        print("Right x")
+        plt.plot(self.rf[1::3])
+        plt.show()
+        print("Left constant")
         plt.plot(self.lf[2::3])
         plt.show()
-        plt.plot(self.lc[0::3])
+        print("Right constant")
+        plt.plot(self.rf[2::3])
         plt.show()
-        plt.plot(self.lc[1::3])
+        print("left_base_undist")
+        plt.plot(self.left_base_undist)
         plt.show()
-        plt.plot(self.lc[2::3])
+        print("right_base_undist")
+        plt.plot(self.right_base_undist)
         plt.show()
+        print("Offset")
         plt.plot(self.ofset)
+        plt.show()
+        print("Left curve")
+        plt.plot(self.lc)
+        plt.show()
+        print("Right curve")
+        plt.plot(self.rc)
         plt.show()
         

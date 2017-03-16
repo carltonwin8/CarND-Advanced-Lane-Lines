@@ -448,12 +448,15 @@ class find_lane_lines():
         lf, lc = self.check_l.check_resutls(lf_f, lc_f)
         rf, rc = self.check_r.check_resutls(rf_f, rc_f)
         ll = poly2image(undist, lf, rf, self.Minv)
-        offset = (rf_cr[2] + lf_cr[2])/2 - img.shape[0]*3.7/700/2        
+
+        left_base_undist = lf_cr[2]*self.src[1][0]/self.dst[1][0]
+        right_base_undist = rf_cr[2]*self.src[2][0]/self.dst[2][0]        
+        offset = (left_base_undist + right_base_undist)/2 - img.shape[0]*3.7/700/2
+        
         text = "Left/Right Curvatures = {:5.0f}/{:5.0f}, offset = {:3.1f} (meters)".format(
                   lc, rc, offset)
         out = cv2.putText(ll, text, (100,50), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)
-        #self.log.image(img, out)
-        self.log.data(lf, rf, lc, rc, offset)
+        self.log.data(lf, rf, lc_f, rc_f, left_base_undist, right_base_undist, offset)
         return out
     
     def history(self):
