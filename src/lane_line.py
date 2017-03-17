@@ -428,7 +428,7 @@ class find_lane_lines():
         self.first = True
         self.lf_old = None
         self.rf_old = None
-            
+                    
     def fll(self, img):
         undist = undistort(img, self.mtx, self.dist)
         thresh = threshold(undist, self.sbl_x_thres_min, self.sbl_x_thres_max, 
@@ -451,8 +451,7 @@ class find_lane_lines():
 
         left_base_undist = lf_cr[2]*self.src[1][0]/self.dst[1][0]
         right_base_undist = rf_cr[2]*self.src[2][0]/self.dst[2][0]        
-        offset = (left_base_undist + right_base_undist)/2 - img.shape[0]*3.7/700/2
-        
+        offset = (left_base_undist + right_base_undist)/2 - img.shape[1]*3.7/700/2
         text = "Left/Right Curvatures = {:5.0f}/{:5.0f}, offset = {:3.1f} (meters)".format(
                   lc, rc, offset)
         out = cv2.putText(ll, text, (100,50), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255,255,255), 2)

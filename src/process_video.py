@@ -55,9 +55,9 @@ def main():
             clip2 = VideoFileClip(video_in)
             clip = clip2.fl_image(fl.fll)
             clip.write_videofile(video_out, audio=False)
-            #analyze = utl.analyze(log.lf, log.rf, log.lc, log.rc, 
-            #                      log.left_base_undist, log.right_base_undist, log.ofset)
-            #analyze.plot1()
+            analyze = utl.analyze(log.lf, log.rf, log.lc, log.rc, 
+                                  log.left_base_undist, log.right_base_undist, log.ofset)
+            analyze.plot1()
 
     if args.tranges != -1:
         for sbl_x_thres_min in sbl_x_thres_mins:

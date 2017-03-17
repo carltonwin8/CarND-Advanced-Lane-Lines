@@ -77,8 +77,13 @@ def lane_line(execute):
                 img = cv2.imread(imgfn)
                 print(imgfn, sbl_x_thres_min, sbl_x_thres_max, 
                       hls_s_thres_min, hls_s_thres_max)
-                #display.imshow(img)            
-                cv2.imwrite(utl_fn.output(imgfn), fl.fll(img))
+                iout = fl.fll(img)
+                cv2.imwrite(utl_fn.output(imgfn), iout)
+        analyze = utl.analyze(log.lf, log.rf, log.lc, log.rc, 
+                              log.left_base_undist, log.right_base_undist, log.ofset)
+        #analyze.show()
+        #analyze.plot1()
+
 def main():
     """
     Generate image files for the documentation

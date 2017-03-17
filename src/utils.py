@@ -195,7 +195,17 @@ class analyze():
         self.right_base_undist = right_base_undist
         self.left_base_undist = left_base_undist
         self.ofset = ofset
-        
+    
+    def show(self):
+        print(self.count)
+        print(self.lf)
+        print(self.rf)
+        print(self.lc)
+        print(self.rc)
+        print(self.left_base_undist)
+        print(self.right_base_undist)
+        print(self.ofset)
+
     def plot1(self):
         print("Left x^2")
         plt.plot(self.lf[0::3])
@@ -214,6 +224,9 @@ class analyze():
         plt.show()
         print("Right constant")
         plt.plot(self.rf[2::3])
+        plt.show()
+        print("Average constant")
+        plt.plot((self.lf[2::3] + self.rf[2::3])/2)
         plt.show()
         print("left_base_undist")
         plt.plot(self.left_base_undist)
